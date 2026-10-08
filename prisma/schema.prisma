@@ -105,12 +105,24 @@ model User {
   id          String   @id @default(uuid())
   email       String   @unique
   fullName    String
+  passwordHash String?
   role        UserRole
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   seller      SellerProfile?
+  sessions    Session[]
   auditEvents AuditEvent[] @relation("AuditActor")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, expiresAt])
 }
 
 model SellerProfile {
