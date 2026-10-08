@@ -1,0 +1,257 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  OPERATIONS_ADMIN
+  COMMERCIAL_MANAGER
+  SELLER
+  FINANCE
+  COMPLIANCE
+}
+
+enum SellerStatus {
+  APPLIED
+  IDENTITY_PENDING
+  DOCUMENT_PENDING
+  AGREEMENT_PENDING
+  TRAINING_PENDING
+  REVIEW
+  ACTIVE
+  SUSPENDED
+  REJECTED
+  TERMINATED
+}
+
+enum PropertyStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  PAUSED
+  RESERVED
+  SOLD
+  ARCHIVED
+}
+
+enum DisclosureLevel {
+  PUBLIC
+  SELLER
+  APPOINTMENT_UNLOCKED
+  ADMIN_ONLY
+}
+
+enum LeadStage {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPERTY_MATCHED
+  APPOINTMENT
+  VISITED
+  OFFER
+  NEGOTIATION
+  RESERVED
+  CLOSING
+  WON
+  LOST
+  DORMANT
+  INVALID
+  DUPLICATE
+}
+
+enum AppointmentStatus {
+  REQUESTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum OfferStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  COUNTERED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+  EXPIRED
+}
+
+enum DealStage {
+  PRE_CLOSING
+  DOCUMENTS
+  FINANCING
+  CLOSING
+  CLOSED
+  CANCELLED
+}
+
+enum CommissionStatus {
+  PROJECTED
+  EARNED
+  APPROVED
+  PAYABLE
+  PAID
+  DISPUTED
+  VOID
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  fullName    String
+  role        UserRole
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  seller      SellerProfile?
+  auditEvents AuditEvent[] @relation("AuditActor")
+}
+
+model SellerProfile {
+  id        String       @id @default(uuid())
+  userId    String       @unique
+  status    SellerStatus @default(APPLIED)
+  city      String?
+  user      User         @relation(fields: [userId], references: [id])
+  leads     Lead[]       @relation("CurrentSeller")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Owner {
+  id          String          @id @default(uuid())
+  legalName   String
+  email       String?
+  phone       String?
+  kycStatus   String          @default("PENDING")
+  archivedAt  DateTime?
+  properties  PropertyOwner[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model Property {
+  id               String          @id @default(uuid())
+  code             String          @unique
+  title            String
+  city             String
+  neighborhood     String
+  address          String
+  propertyType     String
+  salePrice        Decimal         @db.Decimal(16, 2)
+  currency         String          @default("COP")
+  status           PropertyStatus  @default(DRAFT)
+  disclosureLevel  DisclosureLevel @default(SELLER)
+  bedrooms         Int?
+  bathrooms        Int?
+  parkingSpots     Int?
+  builtAreaM2      Decimal?        @db.Decimal(10, 2)
+  description      String?
+  archivedAt       DateTime?
+  owners           PropertyOwner[]
+  media            PropertyMedia[]
+  commissionRules  CommissionRule[]
+  appointments     Appointment[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model PropertyOwner {
+  propertyId          String
+  ownerId             String
+  ownershipPercentage Decimal  @db.Decimal(5, 2)
+  isPrimaryContact    Boolean  @default(false)
+  isSignatory         Boolean  @default(false)
+  property            Property @relation(fields: [propertyId], references: [id])
+  owner               Owner    @relation(fields: [ownerId], references: [id])
+  @@id([propertyId, ownerId])
+}
+
+model PropertyMedia {
+  id         String   @id @default(uuid())
+  propertyId String
+  storageKey String
+  altText    String
+  position   Int      @default(0)
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Lead {
+  id              String    @id @default(uuid())
+  fullName        String
+  normalizedPhone String?   @unique
+  normalizedEmail String?   @unique
+  stage           LeadStage @default(NEW)
+  originSource    String
+  originSellerId  String?
+  currentSellerId String?
+  protectionUntil DateTime?
+  archivedAt      DateTime?
+  currentSeller   SellerProfile? @relation("CurrentSeller", fields: [currentSellerId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Appointment {
+  id         String            @id @default(uuid())
+  propertyId String
+  leadId     String
+  startsAt   DateTime
+  status     AppointmentStatus @default(REQUESTED)
+  property   Property          @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+}
+
+model Offer {
+  id         String      @id @default(uuid())
+  propertyId String
+  leadId     String
+  amount     Decimal     @db.Decimal(16, 2)
+  currency   String      @default("COP")
+  status     OfferStatus @default(SUBMITTED)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Deal {
+  id         String    @id @default(uuid())
+  propertyId String
+  leadId     String
+  stage      DealStage @default(PRE_CLOSING)
+  closedAt   DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model CommissionRule {
+  id                String   @id @default(uuid())
+  propertyId        String
+  sellerPercentage  Decimal  @db.Decimal(5, 2)
+  companyPercentage Decimal  @db.Decimal(5, 2)
+  effectiveFrom     DateTime @default(now())
+  effectiveTo       DateTime?
+  property          Property @relation(fields: [propertyId], references: [id])
+  createdAt         DateTime @default(now())
+}
+
+model AuditEvent {
+  id         String   @id @default(uuid())
+  actorUserId String?
+  actorRole  UserRole?
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json     @default("{}")
+  createdAt  DateTime @default(now())
+  actor      User?    @relation("AuditActor", fields: [actorUserId], references: [id])
+  @@index([entityType, entityId, createdAt])
+  @@index([actorUserId, createdAt])
+}
