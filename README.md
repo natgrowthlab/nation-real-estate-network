@@ -4,7 +4,7 @@ Portal comercial para una red inmobiliaria con inventario centralizado, vendedor
 
 ## Estado actual
 
-La primera versión publicada implementa el shell responsive del portal del asesor: resumen comercial, pipeline de clientes, agenda, inventario, actividad y recomendaciones. El diseño toma como referencia el documento maestro y deja clara la jerarquía de los módulos del MVP.
+La primera versión publicada implementa el shell responsive del portal del asesor: resumen comercial, pipeline de clientes, agenda, inventario, actividad y recomendaciones. El diseño toma como referencia el documento maestro y deja clara la jerarquía de los módulos del MVP. La plataforma ya cuenta con una instancia PostgreSQL Prisma Postgres y su migración de fundación aplicada.
 
 ## Próxima capa de producto
 
