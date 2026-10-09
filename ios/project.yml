@@ -1,0 +1,17 @@
+name: HabitaInmobiliaria
+options:
+  bundleIdPrefix: co.habita
+  deploymentTarget:
+    iOS: "17.0"
+targets:
+  HabitaInmobiliaria:
+    type: application
+    platform: iOS
+    sources: [HabitaInmobiliaria]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: co.habita.inmobiliaria
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Habita
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        SWIFT_VERSION: "5.0"
