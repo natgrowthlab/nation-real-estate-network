@@ -1,0 +1,27 @@
+/* Habita: a lighter, airier display rhythm for all editorial headings. */
+:root { --display-tracking: .022em; }
+
+.brand,
+.portal-brand,
+.auth-brand { letter-spacing: .015em; font-weight: 400; }
+
+.welcome h1,
+.module-heading h1,
+.panel-heading h2,
+.section-heading h2,
+.property-body h3,
+.insight strong,
+.module-empty h2,
+.create-card h2,
+.account-card h2,
+.auth-aside h1,
+.auth-card h2 {
+  font-family: var(--display-font);
+  font-weight: 400;
+  letter-spacing: var(--display-tracking);
+  font-synthesis: none;
+}
+
+@media (max-width: 740px) {
+  :root { --display-tracking: .014em; }
+}
