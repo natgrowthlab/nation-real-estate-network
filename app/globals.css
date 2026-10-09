@@ -3,6 +3,7 @@
 @import "./superlist.css";
 @import "./brand.css";
 @import "./viewport.css";
+@import "./operations.css";
 
 :root { --ink:#123936; --deep:#093532; --teal:#0e8278; --mint:#ddf5ef; --paper:#f7f8f5; --line:#dde7e2; --muted:#6b7b78; --blue:#186aa7; --radius:18px; --display-font:Provicali,'Playfair Display',serif; }
 * { box-sizing:border-box; } body { margin:0; background:var(--paper); color:var(--ink); font-family:Manrope,Arial,sans-serif; } button,input { font:inherit; } button { cursor:pointer; } button:focus-visible,input:focus-visible { outline:3px solid #7bd5c9; outline-offset:3px; }

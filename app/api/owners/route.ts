@@ -7,6 +7,17 @@ import { db } from "../../../src/server/db";
 
 const ownerSchema = z.object({ legalName: z.string().trim().min(2).max(180), email: z.string().trim().email().max(254).optional().or(z.literal("")), phone: z.string().trim().min(7).max(30).optional().or(z.literal("")) });
 
+export async function GET() {
+  try {
+    await requireUser("owner:read");
+    const owners = await db.owner.findMany({ where: { archivedAt: null }, select: { id: true, legalName: true, email: true, phone: true }, orderBy: { createdAt: "desc" }, take: 100 });
+    return NextResponse.json({ owners });
+  } catch (error) {
+    const auth = authorizationResponse(error);
+    return NextResponse.json({ error: auth?.message ?? "No fue posible consultar propietarios." }, { status: auth?.status ?? 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const user = await requireUser("owner:manage");

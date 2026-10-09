@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { PortalScreen } from "../../src/components/portal-screen";
+import { OperationsConsole } from "../../src/components/operations-console";
 
 const sections: Record<string, { title: string; eyebrow: string; description: string; empty: string; action: string }> = {
   inventory: { title: "Inventario", eyebrow: "INMUEBLES", description: "Consulta inmuebles según las reglas de disclosure de tu rol.", empty: "No hay inmuebles que mostrar todavía.", action: "Crear inmueble" },
@@ -15,5 +16,6 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
   const { section } = await params;
   const config = sections[section];
   if (!config) notFound();
-  return <PortalScreen title={config.title} eyebrow={config.eyebrow} description={config.description}><section className="module-empty" aria-labelledby="empty-title"><div className="module-mark">N</div><h2 id="empty-title">{config.empty}</h2><p>Este módulo ya tiene su ruta protegida y está preparado para mostrar datos reales de la red.</p><button type="button">{config.action}</button></section></PortalScreen>;
+  if (["inventory", "clients", "appointments", "offers", "deals", "commissions"].includes(section)) return <PortalScreen title={config.title} eyebrow={config.eyebrow} description={config.description}><OperationsConsole section={section}/></PortalScreen>;
+  return <PortalScreen title={config.title} eyebrow={config.eyebrow} description={config.description}><section className="module-empty" aria-labelledby="empty-title"><div className="module-mark">H</div><h2 id="empty-title">{config.empty}</h2><p>Este módulo se conectará al repositorio documental en el siguiente bloque de cumplimiento.</p><button type="button">{config.action}</button></section></PortalScreen>;
 }
