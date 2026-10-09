@@ -107,6 +107,12 @@ enum CommissionStatus {
   VOID
 }
 
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
 model User {
   id          String   @id @default(uuid())
   email       String   @unique
@@ -118,7 +124,39 @@ model User {
   updatedAt   DateTime @updatedAt
   seller      SellerProfile?
   sessions    Session[]
+  workspaceMemberships WorkspaceMember[]
   auditEvents AuditEvent[] @relation("AuditActor")
+}
+
+model Workspace {
+  id          String            @id @default(uuid())
+  name        String
+  slug        String            @unique
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  memberships WorkspaceMember[]
+  setting     WorkspaceSetting?
+}
+
+model WorkspaceMember {
+  workspaceId String
+  userId      String
+  role        WorkspaceRole @default(MEMBER)
+  createdAt   DateTime      @default(now())
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([workspaceId, userId])
+  @@index([userId])
+}
+
+model WorkspaceSetting {
+  workspaceId String    @id
+  legalName   String?
+  timezone    String    @default("America/Bogota")
+  currency    String    @default("COP")
+  config      Json      @default("{}")
+  updatedAt   DateTime  @updatedAt
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
 
 model Session {
