@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+@import "./portal.css";
 
-:root { --ink:#123936; --deep:#093532; --teal:#0e8278; --mint:#ddf5ef; --paper:#f7f8f5; --line:#dde7e2; --muted:#6b7b78; --blue:#186aa7; --radius:18px; }
+:root { --ink:#123936; --deep:#093532; --teal:#0e8278; --mint:#ddf5ef; --paper:#f7f8f5; --line:#dde7e2; --muted:#6b7b78; --blue:#186aa7; --radius:18px; --display-font:Provicali,'Playfair Display',serif; }
 * { box-sizing:border-box; } body { margin:0; background:var(--paper); color:var(--ink); font-family:Manrope,Arial,sans-serif; } button,input { font:inherit; } button { cursor:pointer; } button:focus-visible,input:focus-visible { outline:3px solid #7bd5c9; outline-offset:3px; }
 main { min-height:100vh; display:flex; } .sidebar { width:250px; min-height:100vh; background:#fcfdfb; border-right:1px solid var(--line); display:flex; flex-direction:column; padding:26px 14px 16px; position:fixed; inset:0 auto 0 0; z-index:30; }
 .brand { display:flex; gap:10px; align-items:center; padding:0 11px 30px; font-family:'Playfair Display',serif; font-weight:700; font-size:21px; letter-spacing:2px; color:#123a36; }.brand-mark { display:grid; place-items:center; width:27px; height:31px; background:var(--teal); color:white; font-family:Manrope,sans-serif; font-size:14px; border-radius:7px 7px 13px 13px; }.close-button,.menu-button { display:none; }

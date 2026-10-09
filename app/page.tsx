@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   ArrowUpRight, Bell, Building2, CalendarDays, ChevronDown, ChevronRight,
   CircleHelp, Command, FileText, Home, LayoutDashboard, MapPin, Menu,
@@ -9,8 +10,9 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  ["Resumen", LayoutDashboard], ["Inventario", Building2], ["Mis clientes", UsersRound],
-  ["Agenda", CalendarDays], ["Comisiones", WalletCards], ["Documentos", FileText]
+  ["Resumen", "/", LayoutDashboard], ["Inventario", "/inventory", Building2], ["Mis clientes", "/clients", UsersRound],
+  ["Agenda", "/appointments", CalendarDays], ["Ofertas", "/offers", FileText], ["Operaciones", "/deals", CheckCircle2],
+  ["Comisiones", "/commissions", WalletCards], ["Documentos", "/documents", FileText]
 ] as const;
 
 const properties = [
@@ -30,18 +32,17 @@ function Metric({ label, value, change, icon: Icon }: { label: string; value: st
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState("");
-  const [active, setActive] = useState("Resumen");
   const notify = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 3200); };
 
-  return <main>
+  return <><a className="skip-link" href="#dashboard-content">Ir al contenido principal</a><main>
     <aside className={menuOpen ? "sidebar open" : "sidebar"} aria-label="Navegación principal">
       <div className="brand"><div className="brand-mark">N</div><span>NATION</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
       <div className="workspace"><span>ESPACIO DE TRABAJO</span><button><div className="avatar small">AM</div> Andina Metropolitana <ChevronDown size={15}/></button></div>
-      <nav>{navigation.map(([label, Icon]) => <button key={label} className={active === label ? "active" : ""} onClick={() => { setActive(label); setMenuOpen(false); notify(`${label} está listo para explorar.`); }}><Icon size={18}/><span>{label}</span>{label === "Agenda" && <em>3</em>}</button>)}</nav>
+      <nav>{navigation.map(([label, href, Icon]) => <Link key={label} href={href} className={label === "Resumen" ? "active" : ""} aria-current={label === "Resumen" ? "page" : undefined} onClick={() => setMenuOpen(false)}><Icon size={18}/><span>{label}</span>{label === "Agenda" && <em>3</em>}</Link>)}</nav>
       <div className="sidebar-bottom"><button onClick={() => notify("Centro de ayuda abierto.")}><CircleHelp size={18}/> Ayuda</button><button onClick={() => notify("Configuración disponible próximamente.")}><Settings size={18}/> Configuración</button><div className="profile"><div className="avatar">AM</div><div><strong>Andrés Morales</strong><small>Asesor senior</small></div><MoreHorizontal size={18}/></div></div>
     </aside>
 
-    <section className="content">
+    <section className="content" id="dashboard-content" tabIndex={-1}>
       <header className="topbar">
         <button className="menu-button" aria-label="Abrir menú" onClick={() => setMenuOpen(true)}><Menu /></button>
         <div className="search"><Search size={18}/><input aria-label="Buscar en Nation" placeholder="Buscar propiedades, clientes o códigos…"/><kbd><Command size={12}/> K</kbd></div>
@@ -84,5 +85,5 @@ export default function HomePage() {
       </div>
     </section>
     {notice && <div className="toast" role="status"><CheckCircle2 size={18}/>{notice}</div>}
-  </main>;
+  </main></>;
 }

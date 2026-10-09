@@ -7,7 +7,7 @@
 ---
 
 **Project:** NATION Real Estate
-**Generated:** 2026-10-08 08:43:21
+**Generated:** 2026-10-09 08:07:02
 **Category:** Real Estate/Property
 
 ---
@@ -153,21 +153,21 @@
 
 ## Style Guidelines
 
-**Style:** Glassmorphism
+**Style:** Skeuomorphism
 
-**Keywords:** Frosted glass, transparent, blurred background, layered, vibrant background, light source, depth, multi-layer
+**Keywords:** Realistic, texture, depth, 3D appearance, real-world metaphors, shadows, gradients, tactile, detailed, material
 
-**Best For:** Modern SaaS, financial dashboards, high-end corporate, lifestyle apps, modal overlays, navigation
+**Best For:** Legacy apps, gaming, immersive storytelling, premium products, luxury, realistic simulations, education
 
-**Key Effects:** Backdrop blur (10-20px), subtle border (1px solid rgba white 0.2), light reflection, Z-depth
+**Key Effects:** Realistic shadows (layers), depth (perspective), texture details (noise, grain), realistic animations (300-500ms)
 
 ### Page Pattern
 
-**Pattern Name:** Before-After Transformation
+**Pattern Name:** Enterprise Gateway
 
-- **Conversion Strategy:** Visual proof of value. 45% higher conversion. Real results. Specific metrics. Guarantee offer.
-- **CTA Placement:** After transformation reveal + Bottom
-- **Section Order:** 1. Hero (problem state), 2. Transformation slider/comparison, 3. How it works, 4. Results CTA
+- **Conversion Strategy:**  logo carousel,  tab switching for industries, Path selection (I am a...). Mega menu navigation. Trust signals prominent.
+- **CTA Placement:** Contact Sales (Primary) + Login (Secondary)
+- **Section Order:** 1. Hero (Video/Mission), 2. Solutions by Industry, 3. Solutions by Role, 4. Client Logos, 5. Contact Sales
 
 ---
 
