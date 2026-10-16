@@ -10,7 +10,7 @@ const navigation = [
   ["Comisiones", "/commissions", WalletCards], ["Documentos", "/documents", FileText],
   ["Usuarios", "/users", UserCog],
 ] as const;
-const topNavigation = navigation.slice(0, 6);
+const topNavigation = navigation;
 
 type Workspace = { id: string; name: string; role: string };
 type Lead = { id: string; fullName: string; stage: string; createdAt: string };
