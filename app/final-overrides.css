@@ -1,0 +1,144 @@
+/* This file is deliberately imported after the legacy styles. It keeps the
+   app canvas light while preserving dark surfaces only for intentional actions. */
+:root {
+  --paper: #f8f7f3 !important;
+  --ink: #1d1d1d !important;
+  --muted: #696969 !important;
+  --line: #e7e4dc !important;
+}
+
+html,
+body,
+main,
+.content,
+.portal-content,
+.dashboard,
+.portal-screen {
+  background: #f8f7f3 !important;
+  color: #1d1d1d !important;
+}
+
+.topbar,
+.portal-topbar {
+  background: rgba(248, 247, 243, .94) !important;
+  border-color: #e7e4dc !important;
+  color: #1d1d1d !important;
+}
+
+.metric-card,
+.panel,
+.agenda,
+.property-card,
+.dashboard-empty,
+.inventory-empty,
+.operation-form,
+.notifications-panel,
+.workspace-options,
+.search,
+.icon-button,
+.content-card,
+.settings-card,
+.profile-card,
+.table-card,
+.modal-card {
+  background: #fff !important;
+  border-color: #e7e4dc !important;
+  color: #1d1d1d !important;
+}
+
+.metric-card *,
+.panel *,
+.agenda *,
+.property-card *,
+.dashboard-empty *,
+.operation-form *,
+.notifications-panel *,
+.workspace-options *,
+.content-card *,
+.settings-card *,
+.profile-card *,
+.table-card *,
+.modal-card * {
+  color: inherit;
+}
+
+.metric-card p,
+.panel p,
+.agenda p,
+.property-card p,
+.agenda small,
+.property-card small,
+.dashboard-empty,
+.appointment span,
+.appointment small,
+.client-row span,
+.intro,
+.eyebrow {
+  color: #696969 !important;
+}
+
+.property-placeholder:not([style]) {
+  background: #eeece5 !important;
+}
+
+.property-placeholder:not([style]) small {
+  color: #1d1d1d !important;
+}
+
+.sidebar,
+.portal-nav {
+  background: #1d1d1d !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
+
+.sidebar *,
+.portal-nav * {
+  color: #fff !important;
+}
+
+.sidebar nav button,
+.sidebar-bottom > button,
+.portal-nav button,
+.portal-nav a {
+  color: rgba(255, 255, 255, .72) !important;
+}
+
+.sidebar nav button.active,
+.portal-nav .active,
+.sidebar nav button:hover,
+.portal-nav button:hover,
+.portal-nav a:hover {
+  background: #fff !important;
+  color: #1d1d1d !important;
+}
+
+.new-button,
+.capture-button,
+.portal-rail-action,
+.portal-primary-action {
+  background: #1d1d1d !important;
+  color: #fff !important;
+}
+
+.new-button *,
+.capture-button *,
+.portal-rail-action *,
+.portal-primary-action * {
+  color: #fff !important;
+}
+
+input,
+select,
+textarea {
+  background: #fff !important;
+  border-color: #ddd9cf !important;
+  color: #1d1d1d !important;
+}
+
+@media (max-width: 760px) {
+  .content,
+  .portal-content {
+    background: #f8f7f3 !important;
+  }
+}

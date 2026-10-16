@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./final-overrides.css";
 
 export const metadata: Metadata = {
   title: "Nexo Inmobiliaria | Red de distribución inmobiliaria",
