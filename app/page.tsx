@@ -1,94 +1,62 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowUpRight, Bell, Building2, CalendarDays, ChevronDown, ChevronRight,
-  CircleHelp, Command, FileText, Home, LayoutDashboard, MapPin, Menu,
-  MoreHorizontal, Plus, Search, Settings, SlidersHorizontal, Sparkles,
-  UsersRound, WalletCards, X, CheckCircle2, Clock3, LogOut
-} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Bell, Building2, CalendarDays, ChevronDown, ChevronRight, CircleHelp, Command, FileText, LayoutDashboard, LogOut, MapPin, Menu, MoreHorizontal, Plus, Search, Settings, UsersRound, WalletCards, X } from "lucide-react";
 
 const navigation = [
   ["Resumen", "/", LayoutDashboard], ["Inventario", "/inventory", Building2], ["Mis clientes", "/clients", UsersRound],
-  ["Agenda", "/appointments", CalendarDays], ["Ofertas", "/offers", FileText], ["Operaciones", "/deals", CheckCircle2],
-  ["Comisiones", "/commissions", WalletCards], ["Documentos", "/documents", FileText]
+  ["Agenda", "/appointments", CalendarDays], ["Ofertas", "/offers", FileText], ["Operaciones", "/deals", FileText],
+  ["Comisiones", "/commissions", WalletCards], ["Documentos", "/documents", FileText],
 ] as const;
 
-const properties = [
-  { code: "NT-24018", name: "Casa Altos del Chicó", location: "Chicó Norte · Bogotá", price: "$ 3.480 M", commission: "$ 69,6 M", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85", tag: "Exclusiva", tone: "blue" },
-  { code: "NT-24021", name: "Apartamento Reserva 56", location: "Chapinero Alto · Bogotá", price: "$ 1.280 M", commission: "$ 25,6 M", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85", tag: "Nuevo", tone: "teal" },
-  { code: "NT-23987", name: "Loft Torre 93", location: "El Poblado · Medellín", price: "$ 890 M", commission: "$ 17,8 M", image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85", tag: "Alta demanda", tone: "amber" }
-];
+type Workspace = { id: string; name: string; role: string };
+type Lead = { id: string; fullName: string; stage: string; createdAt: string };
+type Property = { id: string; code: string; title: string; city: string; neighborhood: string; salePrice: string; currency: string };
+type Appointment = { id: string; startsAt: string; status: string; property: { code: string; title: string } };
+type Offer = { id: string; status: string; createdAt: string };
+type CommissionRule = { id: string };
+type Account = { fullName: string; role: string };
+type Data = { properties: Property[]; leads: Lead[]; appointments: Appointment[]; offers: Offer[]; rules: CommissionRule[] };
+const emptyData: Data = { properties: [], leads: [], appointments: [], offers: [], rules: [] };
+const read = async <T,>(url: string): Promise<T | null> => { const response = await fetch(url); return response.ok ? response.json() : null; };
+const stageLabel = (stage: string) => ({ NEW: "Nuevo", CONTACTED: "Contactado", QUALIFIED: "Calificado", APPOINTMENT: "Visita", VISITED: "Visitó", OFFER: "Oferta", NEGOTIATION: "Negociación", CLOSING: "Cierre", WON: "Ganado" }[stage] ?? stage.replaceAll("_", " "));
+const money = (value: string, currency: string) => new Intl.NumberFormat("es-CO", { style: "currency", currency, maximumFractionDigits: 0 }).format(Number(value));
+const dateTime = (value: string) => new Intl.DateTimeFormat("es-CO", { weekday: "short", hour: "numeric", minute: "2-digit" }).format(new Date(value));
 
-function Metric({ label, value, change, icon: Icon, href }: { label: string; value: string; change: string; icon: typeof UsersRound; href: string }) {
-  return <Link className="metric-link" href={href} aria-label={`${label}: ${value}. Ver detalle`}><article className="metric-card">
-    <div className="metric-icon"><Icon size={19} strokeWidth={1.8} /></div>
-    <p>{label}</p><strong>{value}</strong>
-    <span className="metric-change">{change} <ArrowUpRight size={13} /></span>
-  </article></Link>
+function Metric({ label, value, note, icon: Icon, href }: { label: string; value: string; note: string; icon: typeof UsersRound; href: string }) {
+  return <Link className="metric-link" href={href} aria-label={`${label}: ${value}. Ver detalle`}><article className="metric-card"><div className="metric-icon"><Icon size={19} strokeWidth={1.8} /></div><p>{label}</p><strong>{value}</strong><span className="metric-change">{note}</span></article></Link>;
 }
 
 export default function HomePage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [notice, setNotice] = useState("");
-  const [account, setAccount] = useState<{ fullName: string; role: string } | null>(null);
-  const notify = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 3200); };
+  const [menuOpen, setMenuOpen] = useState(false), [workspaceOpen, setWorkspaceOpen] = useState(false), [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]), [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null), [account, setAccount] = useState<Account | null>(null), [data, setData] = useState<Data>(emptyData), [loading, setLoading] = useState(true);
+  useEffect(() => { Promise.all([read<Account>("/api/account"), read<{ workspaces: Workspace[]; activeWorkspaceId: string | null }>("/api/workspaces"), read<{ properties: Property[] }>("/api/properties"), read<{ leads: Lead[] }>("/api/leads"), read<{ appointments: Appointment[] }>("/api/appointments"), read<{ offers: Offer[] }>("/api/offers"), read<{ rules: CommissionRule[] }>("/api/commissions")]).then(([profile, spaces, properties, leads, appointments, offers, commissions]) => { setAccount(profile); setWorkspaces(spaces?.workspaces ?? []); setActiveWorkspaceId(spaces?.activeWorkspaceId ?? null); setData({ properties: properties?.properties ?? [], leads: leads?.leads ?? [], appointments: appointments?.appointments ?? [], offers: offers?.offers ?? [], rules: commissions?.rules ?? [] }); }).finally(() => setLoading(false)); }, []);
+  const activeWorkspace = workspaces.find((space) => space.id === activeWorkspaceId);
+  const accountName = account?.fullName || "Mi cuenta", initials = accountName.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "—";
+  const upcoming = useMemo(() => data.appointments.filter((item) => new Date(item.startsAt) >= new Date() && item.status !== "CANCELLED").slice(0, 3), [data.appointments]);
+  const activeLeads = data.leads.filter((lead) => !["LOST", "INVALID", "DUPLICATE", "DORMANT"].includes(lead.stage));
+  const negotiating = data.offers.filter((offer) => ["SUBMITTED", "UNDER_REVIEW", "COUNTERED"].includes(offer.status));
+  const notifications = [...data.appointments.filter((item) => item.status === "REQUESTED").map((item) => ({ id: `visit-${item.id}`, text: `Solicitud de visita para ${item.property.title}` })), ...data.offers.filter((item) => ["SUBMITTED", "COUNTERED"].includes(item.status)).map((item) => ({ id: `offer-${item.id}`, text: `Oferta ${item.status === "COUNTERED" ? "con contraoferta" : "pendiente de revisión"}` }))];
+  const selectWorkspace = async (workspaceId: string) => { const response = await fetch("/api/workspaces/active", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ workspaceId }) }); if (response.ok) setActiveWorkspaceId(workspaceId); setWorkspaceOpen(false); };
   const logout = async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.assign("/login"); };
-  useEffect(() => { fetch("/api/account").then(r => r.ok ? r.json() : null).then(setAccount).catch(() => setAccount(null)); }, []);
-  const accountName = account?.fullName || "Mi cuenta";
-  const initials = accountName.split(" ").filter(Boolean).slice(0, 2).map(part => part[0]).join("").toUpperCase() || "—";
 
   return <><a className="skip-link" href="#dashboard-content">Ir al contenido principal</a><main>
     <aside className={menuOpen ? "sidebar open" : "sidebar"} aria-label="Navegación principal">
       <div className="brand"><img className="brand-logo" src="/brand/nexo-mark.svg" alt=""/><span>Nexo Inmobiliaria</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
-      <div className="workspace"><span>ESPACIO DE TRABAJO</span><Link href="/workspaces"><div className="avatar small">{initials}</div> Ver espacios <ChevronDown size={15}/></Link></div>
-      <nav>{navigation.map(([label, href, Icon]) => <Link key={label} href={href} className={label === "Resumen" ? "active" : ""} aria-current={label === "Resumen" ? "page" : undefined} onClick={() => setMenuOpen(false)}><Icon size={18}/><span>{label}</span>{label === "Agenda" && <em>3</em>}</Link>)}</nav>
+      <div className="workspace"><span>ESPACIO DE TRABAJO</span><button aria-expanded={workspaceOpen} aria-controls="workspace-options" onClick={() => setWorkspaceOpen((open) => !open)}><div className="avatar small">{activeWorkspace ? activeWorkspace.name.slice(0, 2).toUpperCase() : initials}</div><b>{activeWorkspace?.name ?? "Seleccionar espacio"}</b><ChevronDown size={15}/></button>{workspaceOpen && <div className="workspace-options" id="workspace-options">{workspaces.map((space) => <button key={space.id} className={space.id === activeWorkspaceId ? "selected" : ""} onClick={() => selectWorkspace(space.id)}>{space.name}<small>{space.role}</small></button>)}<Link href="/workspaces" onClick={() => setWorkspaceOpen(false)}>Administrar espacios</Link></div>}</div>
+      <nav>{navigation.map(([label, href, Icon]) => <Link key={label} href={href} className={label === "Resumen" ? "active" : ""} aria-current={label === "Resumen" ? "page" : undefined} onClick={() => setMenuOpen(false)}><Icon size={18}/><span>{label}</span>{label === "Agenda" && upcoming.length > 0 && <em>{upcoming.length}</em>}</Link>)}</nav>
       <div className="sidebar-bottom"><Link href="/documents"><CircleHelp size={18}/> Ayuda</Link><Link href="/settings"><Settings size={18}/> Configuración</Link><Link className="profile" href="/account"><div className="avatar">{initials}</div><div><strong>{accountName}</strong><small>{account?.role?.replaceAll("_", " ") || "Sin perfil"}</small></div><MoreHorizontal size={18}/></Link><button className="logout-button" type="button" onClick={logout}><LogOut size={18}/> Cerrar sesión</button></div>
     </aside>
-
     <section className="content" id="dashboard-content" tabIndex={-1}>
-      <header className="topbar">
-        <button className="menu-button" aria-label="Abrir menú" onClick={() => setMenuOpen(true)}><Menu /></button>
-        <div className="search"><Search size={18}/><input aria-label="Buscar en Nexo Habitat" placeholder="Buscar propiedades, clientes o códigos…"/><kbd><Command size={12}/> K</kbd></div>
-        <div className="top-actions"><button className="icon-button" aria-label="Notificaciones" onClick={() => notify("Tienes 3 notificaciones pendientes.")}><Bell size={19}/><i /></button><Link className="new-button" href="/clients?new=1"><Plus size={18}/> <span>Nuevo cliente</span></Link></div>
-      </header>
-
+      <header className="topbar"><button className="menu-button" aria-label="Abrir menú" onClick={() => setMenuOpen(true)}><Menu /></button><div className="search"><Search size={18}/><input aria-label="Buscar en Nexo Inmobiliaria" placeholder="Buscar propiedades, clientes o códigos…"/><kbd><Command size={12}/> K</kbd></div><div className="top-actions"><div className="notifications"><button className="icon-button" aria-label="Notificaciones" aria-expanded={notificationsOpen} onClick={() => setNotificationsOpen((open) => !open)}><Bell size={19}/>{notifications.length > 0 && <i/>}</button>{notificationsOpen && <section className="notifications-panel" aria-label="Centro de notificaciones"><div><strong>Notificaciones</strong><button onClick={() => setNotificationsOpen(false)} aria-label="Cerrar notificaciones"><X size={15}/></button></div>{notifications.length ? notifications.map((note) => <p key={note.id}>{note.text}</p>) : <p className="empty-notification">No tienes notificaciones pendientes.</p>}</section>}</div><Link className="new-button" href="/clients?new=1"><Plus size={18}/> <span>Nuevo cliente</span></Link></div></header>
       <div className="dashboard">
-        <section className="welcome">
-          <div><p className="eyebrow">RESUMEN DE OPERACIÓN</p><h1>Buenos días, {accountName}<span>.</span></h1><p className="intro">Tu red se mueve contigo. Aquí está el pulso de tu operación.</p></div>
-          <Link className="capture-button" href="/inventory?capture=1"><Building2 size={18}/><span>Captar propiedad</span><ArrowUpRight size={17}/></Link>
-        </section>
-
-        <section className="metrics" aria-label="Indicadores comerciales">
-          <Metric label="Clientes activos" value="24" change="12% este mes" icon={UsersRound} href="/clients"/>
-          <Metric label="Visitas programadas" value="08" change="3 para hoy" icon={CalendarDays} href="/appointments"/>
-          <Metric label="Negociaciones" value="05" change="2 por cerrar" icon={FileText} href="/offers"/>
-          <Metric label="Comisión proyectada" value="$ 42,8 M" change="18% vs. mes anterior" icon={WalletCards} href="/commissions"/>
-        </section>
-
-        <section className="grid-main">
-          <article className="pipeline panel">
-            <div className="panel-heading"><div><p className="eyebrow">PIPELINE</p><h2>Clientes en movimiento</h2></div><Link className="quiet-button" href="/clients">Ver todos <ChevronRight size={16}/></Link></div>
-            <div className="pipeline-stats"><div><strong>24</strong><span>Activos</span></div><div><strong>8</strong><span>En visita</span></div><div><strong>5</strong><span>En oferta</span></div><div><strong>3</strong><span>En cierre</span></div></div>
-            <div className="progress-bar" aria-label="Estado de los clientes"><i style={{width:"31%"}}/><i style={{width:"33%"}}/><i style={{width:"21%"}}/><i style={{width:"15%"}}/></div>
-            <div className="client-list">
-              {[['LM','Laura Méndez','Buscando en Chicó','Seguimiento hoy','coral'],['CG','Carlos Gómez','Visita · Reserva 56','10:30 a. m.','blue'],['SV','Sofía Velasco','Oferta en revisión','Hace 2 h','green']].map(([initials,name,detail,meta,color]) => <div className="client-row" key={name}><div className={`avatar ${color}`}>{initials}</div><div><strong>{name}</strong><span>{detail}</span></div><time>{meta}</time><ChevronRight size={17}/></div>)}
-            </div>
-          </article>
-
-          <article className="agenda panel">
-            <div className="panel-heading"><div><p className="eyebrow">AGENDA DE HOY</p><h2>Próximas visitas</h2></div><Link className="round-add" aria-label="Programar visita" href="/appointments?new=1"><Plus size={17}/></Link></div>
-            <div className="agenda-list"><div className="appointment"><time>10:30<small>a. m.</small></time><div className="appointment-line teal"/><div><strong>Reserva 56 · Apto 402</strong><span><MapPin size={13}/> Chapinero Alto</span><small>Con Carlos Gómez</small></div></div><div className="appointment"><time>02:00<small>p. m.</small></time><div className="appointment-line blue"/><div><strong>Casa Altos del Chicó</strong><span><MapPin size={13}/> Calle 93 # 11–20</span><small>Con Laura Méndez</small></div></div><div className="appointment"><time>04:30<small>p. m.</small></time><div className="appointment-line amber"/><div><strong>Loft Torre 93</strong><span><MapPin size={13}/> El Poblado</span><small>Con David Arango</small></div></div></div>
-            <Link className="schedule-link" href="/appointments">Ver calendario completo <ArrowUpRight size={15}/></Link>
-          </article>
-        </section>
-
-        <section className="inventory-section"><div className="section-heading"><div><p className="eyebrow">INVENTARIO CURADO</p><h2>Propiedades para tus clientes</h2></div><div><Link className="filter-button" href="/inventory?filters=1"><SlidersHorizontal size={16}/> Filtrar</Link><Link className="quiet-button all-button" href="/inventory">Ver inventario <ChevronRight size={16}/></Link></div></div><div className="properties">{properties.map((property) => <article className="property-card" key={property.code}><div className="property-image" style={{backgroundImage:`linear-gradient(180deg, transparent 35%, rgba(5,32,32,.66)), url(${property.image})`}}><span className={`property-tag ${property.tone}`}>{property.tag}</span><button aria-label={`Guardar ${property.name}`} onClick={() => notify(`${property.name} fue guardada.`)}>♡</button><small>{property.code}</small></div><div className="property-body"><p>{property.location}</p><h3>{property.name}</h3><div className="property-features"><span>3 hab.</span><span>4 baños</span><span>2 parqueaderos</span></div><div className="property-price"><strong>{property.price}</strong><span>Comisión <b>{property.commission}</b></span></div></div></article>)}</div></section>
-
-        <section className="bottom-grid"><article className="activity panel"><div className="panel-heading"><div><p className="eyebrow">TRAZABILIDAD</p><h2>Actividad reciente</h2></div><Link className="quiet-button" href="/documents?audit=1">Ver historial <ChevronRight size={16}/></Link></div><div className="activity-item"><div className="event-icon"><CheckCircle2 size={17}/></div><p><b>Visita confirmada</b><span>Reserva 56 · con Carlos Gómez</span></p><time>Hace 12 min</time></div><div className="activity-item"><div className="event-icon neutral"><Clock3 size={17}/></div><p><b>Seguimiento pendiente</b><span>Laura Méndez no registra actividad hace 4 días</span></p><time>Hace 1 h</time></div></article><article className="insight"><Sparkles size={19}/><div><p>RECOMENDACIÓN HABITA</p><strong>3 clientes pueden hacer match con propiedades recién publicadas.</strong><Link href="/clients?matches=1">Ver coincidencias <ArrowUpRight size={15}/></Link></div></article></section>
+        <section className="welcome"><div><p className="eyebrow">RESUMEN {activeWorkspace ? `· ${activeWorkspace.name.toUpperCase()}` : ""}</p><h1>Buenos días, {accountName}<span>.</span></h1><p className="intro">{activeWorkspace ? `Revisa la actividad disponible en ${activeWorkspace.name}.` : "Crea o selecciona un espacio de trabajo para organizar tu operación."}</p></div><Link className="capture-button" href="/inventory?capture=1"><Building2 size={18}/><span>Captar propiedad</span></Link></section>
+        <section className="metrics" aria-label="Indicadores comerciales"><Metric label="Clientes activos" value={String(activeLeads.length)} note="Registros reales" icon={UsersRound} href="/clients"/><Metric label="Visitas programadas" value={String(upcoming.length)} note="Próximas visitas" icon={CalendarDays} href="/appointments"/><Metric label="Negociaciones" value={String(negotiating.length)} note="Ofertas abiertas" icon={FileText} href="/offers"/><Metric label="Reglas de comisión" value={String(data.rules.length)} note="Configuradas" icon={WalletCards} href="/commissions"/></section>
+        <section className="grid-main"><article className="pipeline panel"><div className="panel-heading"><div><p className="eyebrow">PIPELINE</p><h2>Clientes en movimiento</h2></div><Link className="quiet-button" href="/clients">Ver todos <ChevronRight size={16}/></Link></div>{activeLeads.length ? <div className="client-list">{activeLeads.slice(0, 4).map((lead) => <Link className="client-row" href="/clients" key={lead.id}><div className="avatar teal">{lead.fullName.split(" ").map((part) => part[0]).slice(0, 2).join("")}</div><div><strong>{lead.fullName}</strong><span>{stageLabel(lead.stage)}</span></div><ChevronRight size={17}/></Link>)}</div> : <p className="dashboard-empty">Aún no hay clientes activos. <Link href="/clients?new=1">Crea el primero.</Link></p>}</article><article className="agenda panel"><div className="panel-heading"><div><p className="eyebrow">AGENDA</p><h2>Próximas visitas</h2></div><Link className="round-add" aria-label="Programar visita" href="/appointments?new=1"><Plus size={17}/></Link></div>{upcoming.length ? <div className="agenda-list">{upcoming.map((appointment) => <div className="appointment" key={appointment.id}><time>{dateTime(appointment.startsAt)}</time><div className="appointment-line teal"/><div><strong>{appointment.property.title}</strong><span><MapPin size={13}/>{appointment.property.code}</span><small>{appointment.status.replaceAll("_", " ")}</small></div></div>)}</div> : <p className="dashboard-empty">No hay visitas programadas.</p>}<Link className="schedule-link" href="/appointments">Ver calendario completo <ChevronRight size={15}/></Link></article></section>
+        <section className="inventory-section"><div className="section-heading"><div><p className="eyebrow">INVENTARIO</p><h2>Propiedades registradas</h2></div><Link className="quiet-button all-button" href="/inventory">Ver inventario <ChevronRight size={16}/></Link></div>{data.properties.length ? <div className="properties">{data.properties.slice(0, 3).map((property) => <Link className="property-card" href="/inventory" key={property.id}><div className="property-image property-placeholder"><small>{property.code}</small></div><div className="property-body"><p>{property.neighborhood} · {property.city}</p><h3>{property.title}</h3><div className="property-price"><strong>{money(property.salePrice, property.currency)}</strong><span>Valor publicado</span></div></div></Link>)}</div> : <div className="dashboard-empty inventory-empty">No hay propiedades registradas todavía. <Link href="/inventory?capture=1">Captar una propiedad.</Link></div>}</section>
+        {loading && <p className="dashboard-loading" role="status">Actualizando resumen…</p>}
       </div>
     </section>
-    {notice && <div className="toast" role="status"><CheckCircle2 size={18}/>{notice}</div>}
   </main></>;
 }
