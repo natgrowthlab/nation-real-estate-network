@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight, Bell, Building2, CalendarDays, ChevronDown, ChevronRight,
@@ -32,15 +32,19 @@ function Metric({ label, value, change, icon: Icon, href }: { label: string; val
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState("");
+  const [account, setAccount] = useState<{ fullName: string; role: string } | null>(null);
   const notify = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 3200); };
   const logout = async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.assign("/login"); };
+  useEffect(() => { fetch("/api/account").then(r => r.ok ? r.json() : null).then(setAccount).catch(() => setAccount(null)); }, []);
+  const accountName = account?.fullName || "Mi cuenta";
+  const initials = accountName.split(" ").filter(Boolean).slice(0, 2).map(part => part[0]).join("").toUpperCase() || "—";
 
   return <><a className="skip-link" href="#dashboard-content">Ir al contenido principal</a><main>
     <aside className={menuOpen ? "sidebar open" : "sidebar"} aria-label="Navegación principal">
-      <div className="brand"><img className="brand-logo" src="/brand/nexo-mark.svg" alt=""/><span>Nexo Habitat</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
-      <div className="workspace"><span>ESPACIO DE TRABAJO</span><Link href="/workspaces"><div className="avatar small">AM</div> Andina Metropolitana <ChevronDown size={15}/></Link></div>
+      <div className="brand"><img className="brand-logo" src="/brand/nexo-mark.svg" alt=""/><span>Nexo Inmobiliaria</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
+      <div className="workspace"><span>ESPACIO DE TRABAJO</span><Link href="/workspaces"><div className="avatar small">{initials}</div> Ver espacios <ChevronDown size={15}/></Link></div>
       <nav>{navigation.map(([label, href, Icon]) => <Link key={label} href={href} className={label === "Resumen" ? "active" : ""} aria-current={label === "Resumen" ? "page" : undefined} onClick={() => setMenuOpen(false)}><Icon size={18}/><span>{label}</span>{label === "Agenda" && <em>3</em>}</Link>)}</nav>
-      <div className="sidebar-bottom"><Link href="/documents"><CircleHelp size={18}/> Ayuda</Link><Link href="/settings"><Settings size={18}/> Configuración</Link><Link className="profile" href="/account"><div className="avatar">AM</div><div><strong>Andrés Morales</strong><small>Asesor senior</small></div><MoreHorizontal size={18}/></Link><button className="logout-button" type="button" onClick={logout}><LogOut size={18}/> Cerrar sesión</button></div>
+      <div className="sidebar-bottom"><Link href="/documents"><CircleHelp size={18}/> Ayuda</Link><Link href="/settings"><Settings size={18}/> Configuración</Link><Link className="profile" href="/account"><div className="avatar">{initials}</div><div><strong>{accountName}</strong><small>{account?.role?.replaceAll("_", " ") || "Sin perfil"}</small></div><MoreHorizontal size={18}/></Link><button className="logout-button" type="button" onClick={logout}><LogOut size={18}/> Cerrar sesión</button></div>
     </aside>
 
     <section className="content" id="dashboard-content" tabIndex={-1}>
@@ -52,7 +56,7 @@ export default function HomePage() {
 
       <div className="dashboard">
         <section className="welcome">
-          <div><p className="eyebrow">MIÉRCOLES, 8 DE OCTUBRE</p><h1>Buenos días, Andrés<span>.</span></h1><p className="intro">Tu red se mueve contigo. Aquí está el pulso de tu operación.</p></div>
+          <div><p className="eyebrow">RESUMEN DE OPERACIÓN</p><h1>Buenos días, {accountName}<span>.</span></h1><p className="intro">Tu red se mueve contigo. Aquí está el pulso de tu operación.</p></div>
           <Link className="capture-button" href="/inventory?capture=1"><Building2 size={18}/><span>Captar propiedad</span><ArrowUpRight size={17}/></Link>
         </section>
 

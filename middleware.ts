@@ -5,7 +5,7 @@ const openPaths = ["/login", "/setup"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (pathname.startsWith("/api/") || openPaths.some((path) => pathname === path)) return NextResponse.next();
+  if (pathname.startsWith("/api/") || pathname.startsWith("/brand/") || pathname === "/icon.png" || openPaths.some((path) => pathname === path)) return NextResponse.next();
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   if (token && await verifySession(token)) return NextResponse.next();
   const url = new URL("/login", request.url);
