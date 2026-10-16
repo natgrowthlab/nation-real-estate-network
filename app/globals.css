@@ -8,6 +8,7 @@
 @import "./property-profile.css";
 @import "./admin-controls.css";
 @import "./rapport-theme.css";
+@import "./rapport-palette.css";
 
 :root { --ink:#123936; --deep:#093532; --teal:#0e8278; --mint:#ddf5ef; --paper:#f7f8f5; --line:#dde7e2; --muted:#6b7b78; --blue:#186aa7; --radius:18px; --display-font:Provicali,'Playfair Display',serif; }
 /* Live dashboard controls */
