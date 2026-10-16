@@ -14,19 +14,31 @@ const propertySchema = z.object({
   address: z.string().trim().min(5).max(220), propertyType: z.string().trim().min(2).max(60),
   salePrice: z.string().regex(/^\d+(\.\d{1,2})?$/), ownerId: z.string().uuid(),
 });
+const acceptedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+const maxImageBytes = 2 * 1024 * 1024;
+
+async function readPropertyRequest(request: Request) {
+  if (!request.headers.get("content-type")?.includes("multipart/form-data")) return { input: await request.json(), image: null as File | null };
+  const form = await request.formData();
+  const image = form.get("image");
+  return {
+    input: Object.fromEntries(["code", "title", "city", "neighborhood", "address", "propertyType", "salePrice", "ownerId"].map((key) => [key, form.get(key)])),
+    image: image instanceof File && image.size > 0 ? image : null,
+  };
+}
 
 export async function GET() {
   try {
     const user = await requireUser("property:read");
     const properties = await db.property.findMany({
       where: { archivedAt: null, ...(user.role === "SELLER" ? { status: "ACTIVE" } : {}) },
-      include: { owners: { include: { owner: true } } }, orderBy: { createdAt: "desc" }, take: 50,
+      include: { owners: { include: { owner: true } }, media: { orderBy: { position: "asc" }, take: 1 } }, orderBy: { createdAt: "desc" }, take: 50,
     });
-    const response = properties.map((property) => discloseProperty({
+    const response = properties.map((property) => ({ ...discloseProperty({
       id: property.id, code: property.code, title: property.title, city: property.city, neighborhood: property.neighborhood,
       address: property.address, salePrice: property.salePrice.toString(), currency: property.currency, description: property.description,
       disclosureLevel: property.disclosureLevel, owner: { legalName: property.owners[0]?.owner.legalName ?? "", email: property.owners[0]?.owner.email ?? null, phone: property.owners[0]?.owner.phone ?? null },
-    }, { role: user.role }));
+    }, { role: user.role }), imageUrl: property.media[0]?.storageKey ?? null }));
     return NextResponse.json({ properties: response });
   } catch (error) {
     const auth = authorizationResponse(error);
@@ -37,12 +49,15 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const user = await requireUser("property:create");
-    const parsed = propertySchema.safeParse(await request.json());
+    const { input, image } = await readPropertyRequest(request);
+    const parsed = propertySchema.safeParse(input);
     if (!parsed.success) return NextResponse.json({ error: "Revisa los datos del inmueble." }, { status: 400 });
+    if (image && (!acceptedImageTypes.includes(image.type) || image.size > maxImageBytes)) return NextResponse.json({ error: "La imagen debe ser JPG, PNG o WebP y pesar máximo 2 MB." }, { status: 400 });
     const owner = await db.owner.findFirst({ where: { id: parsed.data.ownerId, archivedAt: null }, select: { id: true } });
     if (!owner) return NextResponse.json({ error: "El propietario no existe o está archivado." }, { status: 422 });
     const audit = new AuditService(new PrismaAuditWriter(db));
-    const property = await new PropertyService(new PrismaPropertyWriter(db), audit).create({ id: user.id, role: user.role }, parsed.data);
+    const imageDataUrl = image ? `data:${image.type};base64,${Buffer.from(await image.arrayBuffer()).toString("base64")}` : undefined;
+    const property = await new PropertyService(new PrismaPropertyWriter(db), audit).create({ id: user.id, role: user.role }, { ...parsed.data, imageDataUrl });
     return NextResponse.json(property, { status: 201 });
   } catch (error) {
     const auth = authorizationResponse(error);

@@ -15,6 +15,7 @@ export class PrismaPropertyWriter implements PropertyWriter {
         propertyType: input.propertyType,
         salePrice: new Prisma.Decimal(input.salePrice),
         owners: { create: { ownerId: input.ownerId, ownershipPercentage: new Prisma.Decimal(100), isPrimaryContact: true } },
+        ...(input.imageDataUrl ? { media: { create: { storageKey: input.imageDataUrl, altText: `${input.title} · ${input.code}`, position: 0 } } } : {}),
       },
       select: { id: true, code: true },
     });
