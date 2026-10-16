@@ -22,7 +22,7 @@ private struct DashboardView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("HABITA INMOBILIARIA").font(.caption.weight(.semibold)).tracking(1.4).foregroundStyle(.secondary)
+                    Text("NEXO HABITAT").font(.caption.weight(.semibold)).tracking(1.4).foregroundStyle(.secondary)
                     Text("Tu operación,\nen movimiento.").font(.system(size: 38, weight: .regular, design: .rounded)).tracking(0.6)
                     Text("Controla inventario, clientes y cierres desde un único lugar.").foregroundStyle(.secondary)
                     MetricGrid()
@@ -66,7 +66,7 @@ private struct OperationsView: View {
 
 private struct AccountView: View {
     var body: some View {
-        NavigationStack { Form { Section("Habita Inmobiliaria") { Label("Andrés Morales", systemImage: "person.crop.circle.fill"); Text("Asesor senior").foregroundStyle(.secondary) } } .navigationTitle("Cuenta") }
+        NavigationStack { Form { Section("Nexo Habitat") { Label("Andrés Morales", systemImage: "person.crop.circle.fill"); Text("Asesor senior").foregroundStyle(.secondary) } } .navigationTitle("Cuenta") }
     }
 }
 

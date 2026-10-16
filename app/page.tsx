@@ -37,7 +37,7 @@ export default function HomePage() {
 
   return <><a className="skip-link" href="#dashboard-content">Ir al contenido principal</a><main>
     <aside className={menuOpen ? "sidebar open" : "sidebar"} aria-label="Navegación principal">
-      <div className="brand"><img className="brand-logo" src="/brand/habita-mark.png" alt=""/><span>Habita Inmobiliaria</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
+      <div className="brand"><img className="brand-logo" src="/brand/nexo-mark.svg" alt=""/><span>Nexo Habitat</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
       <div className="workspace"><span>ESPACIO DE TRABAJO</span><Link href="/workspaces"><div className="avatar small">AM</div> Andina Metropolitana <ChevronDown size={15}/></Link></div>
       <nav>{navigation.map(([label, href, Icon]) => <Link key={label} href={href} className={label === "Resumen" ? "active" : ""} aria-current={label === "Resumen" ? "page" : undefined} onClick={() => setMenuOpen(false)}><Icon size={18}/><span>{label}</span>{label === "Agenda" && <em>3</em>}</Link>)}</nav>
       <div className="sidebar-bottom"><Link href="/documents"><CircleHelp size={18}/> Ayuda</Link><Link href="/settings"><Settings size={18}/> Configuración</Link><Link className="profile" href="/account"><div className="avatar">AM</div><div><strong>Andrés Morales</strong><small>Asesor senior</small></div><MoreHorizontal size={18}/></Link><button className="logout-button" type="button" onClick={logout}><LogOut size={18}/> Cerrar sesión</button></div>
@@ -46,7 +46,7 @@ export default function HomePage() {
     <section className="content" id="dashboard-content" tabIndex={-1}>
       <header className="topbar">
         <button className="menu-button" aria-label="Abrir menú" onClick={() => setMenuOpen(true)}><Menu /></button>
-        <div className="search"><Search size={18}/><input aria-label="Buscar en Habita Inmobiliaria" placeholder="Buscar propiedades, clientes o códigos…"/><kbd><Command size={12}/> K</kbd></div>
+        <div className="search"><Search size={18}/><input aria-label="Buscar en Nexo Habitat" placeholder="Buscar propiedades, clientes o códigos…"/><kbd><Command size={12}/> K</kbd></div>
         <div className="top-actions"><button className="icon-button" aria-label="Notificaciones" onClick={() => notify("Tienes 3 notificaciones pendientes.")}><Bell size={19}/><i /></button><Link className="new-button" href="/clients?new=1"><Plus size={18}/> <span>Nuevo cliente</span></Link></div>
       </header>
 

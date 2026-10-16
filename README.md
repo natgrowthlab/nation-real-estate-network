@@ -1,4 +1,4 @@
-# Habita Inmobiliaria · Real Estate Distribution Network
+# Nexo Habitat · Real Estate Distribution Network
 
 Portal comercial para una red inmobiliaria con inventario centralizado, vendedores aprobados, atribución de leads y trazabilidad hasta la comisión.
 
