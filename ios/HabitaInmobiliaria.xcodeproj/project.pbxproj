@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		6687DD1A87666445E05EE888 /* HabitaInmobiliariaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D4A1DED7B359CF05F7FF76 /* HabitaInmobiliariaApp.swift */; };
+		DF17F2700F157238853CDC32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B6634A52EE001C361E35E39 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B6634A52EE001C361E35E39 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		42A7ECF3E502D22208616919 /* HabitaInmobiliaria.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HabitaInmobiliaria.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2D4A1DED7B359CF05F7FF76 /* HabitaInmobiliariaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitaInmobiliariaApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -35,6 +37,7 @@
 		80F6C1BF76ED5306B4198608 /* HabitaInmobiliaria */ = {
 			isa = PBXGroup;
 			children = (
+				2B6634A52EE001C361E35E39 /* Assets.xcassets */,
 				B2D4A1DED7B359CF05F7FF76 /* HabitaInmobiliariaApp.swift */,
 			);
 			path = HabitaInmobiliaria;
@@ -48,6 +51,7 @@
 			buildConfigurationList = F07BDF88E5A14ED7FDD85CB0 /* Build configuration list for PBXNativeTarget "HabitaInmobiliaria" */;
 			buildPhases = (
 				D78BC64250BD59DA0F1E470E /* Sources */,
+				1D897CEDCC65164956152E3A /* Resources */,
 			);
 			buildRules = (
 			);
@@ -89,6 +93,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D897CEDCC65164956152E3A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF17F2700F157238853CDC32 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D78BC64250BD59DA0F1E470E /* Sources */ = {

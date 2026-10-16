@@ -6,7 +6,7 @@ import {
   ArrowUpRight, Bell, Building2, CalendarDays, ChevronDown, ChevronRight,
   CircleHelp, Command, FileText, Home, LayoutDashboard, MapPin, Menu,
   MoreHorizontal, Plus, Search, Settings, SlidersHorizontal, Sparkles,
-  UsersRound, WalletCards, X, CheckCircle2, Clock3
+  UsersRound, WalletCards, X, CheckCircle2, Clock3, LogOut
 } from "lucide-react";
 
 const navigation = [
@@ -33,13 +33,14 @@ export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const notify = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 3200); };
+  const logout = async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.assign("/login"); };
 
   return <><a className="skip-link" href="#dashboard-content">Ir al contenido principal</a><main>
     <aside className={menuOpen ? "sidebar open" : "sidebar"} aria-label="Navegación principal">
-      <div className="brand"><div className="brand-mark">H</div><span>Habita Inmobiliaria</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
+      <div className="brand"><img className="brand-logo" src="/brand/habita-mark.png" alt=""/><span>Habita Inmobiliaria</span><button className="close-button" aria-label="Cerrar menú" onClick={() => setMenuOpen(false)}><X /></button></div>
       <div className="workspace"><span>ESPACIO DE TRABAJO</span><Link href="/workspaces"><div className="avatar small">AM</div> Andina Metropolitana <ChevronDown size={15}/></Link></div>
       <nav>{navigation.map(([label, href, Icon]) => <Link key={label} href={href} className={label === "Resumen" ? "active" : ""} aria-current={label === "Resumen" ? "page" : undefined} onClick={() => setMenuOpen(false)}><Icon size={18}/><span>{label}</span>{label === "Agenda" && <em>3</em>}</Link>)}</nav>
-      <div className="sidebar-bottom"><Link href="/documents"><CircleHelp size={18}/> Ayuda</Link><Link href="/settings"><Settings size={18}/> Configuración</Link><Link className="profile" href="/account"><div className="avatar">AM</div><div><strong>Andrés Morales</strong><small>Asesor senior</small></div><MoreHorizontal size={18}/></Link></div>
+      <div className="sidebar-bottom"><Link href="/documents"><CircleHelp size={18}/> Ayuda</Link><Link href="/settings"><Settings size={18}/> Configuración</Link><Link className="profile" href="/account"><div className="avatar">AM</div><div><strong>Andrés Morales</strong><small>Asesor senior</small></div><MoreHorizontal size={18}/></Link><button className="logout-button" type="button" onClick={logout}><LogOut size={18}/> Cerrar sesión</button></div>
     </aside>
 
     <section className="content" id="dashboard-content" tabIndex={-1}>
