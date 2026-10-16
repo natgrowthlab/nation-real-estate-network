@@ -38,7 +38,7 @@ export async function GET() {
       id: property.id, code: property.code, title: property.title, city: property.city, neighborhood: property.neighborhood,
       address: property.address, salePrice: property.salePrice.toString(), currency: property.currency, description: property.description,
       disclosureLevel: property.disclosureLevel, owner: { legalName: property.owners[0]?.owner.legalName ?? "", email: property.owners[0]?.owner.email ?? null, phone: property.owners[0]?.owner.phone ?? null },
-    }, { role: user.role }), imageUrl: property.media[0]?.storageKey ?? null }));
+    }, { role: user.role }), imageUrl: property.media[0]?.storageKey ?? null, propertyType: property.propertyType, status: property.status }));
     return NextResponse.json({ properties: response });
   } catch (error) {
     const auth = authorizationResponse(error);

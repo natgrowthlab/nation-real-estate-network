@@ -4,10 +4,10 @@ export type Capability =
   | "property:create" | "property:read" | "property:publish" | "property:read_sensitive"
   | "owner:read" | "owner:manage" | "lead:create" | "lead:read_own" | "lead:read_all" | "lead:assign"
   | "appointment:manage" | "offer:manage" | "deal:manage" | "commission:read_own"
-  | "commission:approve" | "audit:read";
+  | "commission:approve" | "audit:read" | "user:manage";
 
 const permissions: Record<Role, readonly Capability[]> = {
-  SUPER_ADMIN: ["property:create", "property:read", "property:publish", "property:read_sensitive", "owner:read", "owner:manage", "lead:create", "lead:read_own", "lead:read_all", "lead:assign", "appointment:manage", "offer:manage", "deal:manage", "commission:read_own", "commission:approve", "audit:read"],
+  SUPER_ADMIN: ["property:create", "property:read", "property:publish", "property:read_sensitive", "owner:read", "owner:manage", "lead:create", "lead:read_own", "lead:read_all", "lead:assign", "appointment:manage", "offer:manage", "deal:manage", "commission:read_own", "commission:approve", "audit:read", "user:manage"],
   OPERATIONS_ADMIN: ["property:create", "property:read", "property:publish", "property:read_sensitive", "owner:read", "owner:manage", "lead:create", "lead:read_all", "lead:assign", "appointment:manage", "offer:manage", "deal:manage", "audit:read"],
   COMMERCIAL_MANAGER: ["property:read", "lead:create", "lead:read_own", "lead:read_all", "lead:assign", "appointment:manage", "offer:manage", "deal:manage", "commission:read_own"],
   SELLER: ["property:read", "lead:create", "lead:read_own", "commission:read_own"],

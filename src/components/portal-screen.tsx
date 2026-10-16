@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, CalendarDays, CheckCircle2, FileText, LayoutDashboard, UsersRound, WalletCards, LogOut } from "lucide-react";
+import { Building2, CalendarDays, CheckCircle2, FileText, LayoutDashboard, UsersRound, WalletCards, LogOut, UserCog } from "lucide-react";
 
 const items = [
   ["Resumen", "/", LayoutDashboard], ["Inventario", "/inventory", Building2], ["Mis clientes", "/clients", UsersRound],
   ["Agenda", "/appointments", CalendarDays], ["Ofertas", "/offers", FileText], ["Operaciones", "/deals", CheckCircle2],
   ["Comisiones", "/commissions", WalletCards], ["Documentos", "/documents", FileText],
+  ["Usuarios", "/users", UserCog],
 ] as const;
 
 export function PortalScreen({ title, eyebrow, description, children }: { title: string; eyebrow: string; description: string; children: React.ReactNode }) {

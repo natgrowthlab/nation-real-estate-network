@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Bell, Building2, CalendarDays, ChevronDown, ChevronRight, CircleHelp, Command, FileText, LayoutDashboard, LogOut, MapPin, Menu, MoreHorizontal, Plus, Search, Settings, UsersRound, WalletCards, X } from "lucide-react";
+import { Bell, Building2, CalendarDays, ChevronDown, ChevronRight, CircleHelp, Command, FileText, LayoutDashboard, LogOut, MapPin, Menu, MoreHorizontal, Plus, Search, Settings, UserCog, UsersRound, WalletCards, X } from "lucide-react";
 
 const navigation = [
   ["Resumen", "/", LayoutDashboard], ["Inventario", "/inventory", Building2], ["Mis clientes", "/clients", UsersRound],
   ["Agenda", "/appointments", CalendarDays], ["Ofertas", "/offers", FileText], ["Operaciones", "/deals", FileText],
   ["Comisiones", "/commissions", WalletCards], ["Documentos", "/documents", FileText],
+  ["Usuarios", "/users", UserCog],
 ] as const;
 
 type Workspace = { id: string; name: string; role: string };

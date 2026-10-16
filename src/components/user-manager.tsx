@@ -1,0 +1,16 @@
+"use client";
+
+import { FormEvent, useEffect, useState } from "react";
+import { Plus, RefreshCw, UserRoundCheck, UserRoundX } from "lucide-react";
+
+type User = { id: string; fullName: string; email: string; role: string; isActive: boolean; createdAt: string };
+const roles = ["SUPER_ADMIN", "OPERATIONS_ADMIN", "COMMERCIAL_MANAGER", "SELLER", "FINANCE", "COMPLIANCE"];
+
+export function UserManager() {
+  const [users, setUsers] = useState<User[]>([]), [notice, setNotice] = useState(""), [loading, setLoading] = useState(false);
+  const load = async () => { setLoading(true); const response = await fetch("/api/users"); const body = await response.json(); setUsers(response.ok ? body.users : []); if (!response.ok) setNotice(body.error ?? "No fue posible consultar usuarios."); setLoading(false); };
+  useEffect(() => { load(); }, []);
+  const create = async (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); const form = event.currentTarget; const response = await fetch("/api/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) }); const body = await response.json(); setNotice(response.ok ? "Usuario creado correctamente." : body.error ?? "No fue posible crear el usuario."); if (response.ok) { form.reset(); await load(); } };
+  const toggle = async (user: User) => { const response = await fetch(`/api/users/${user.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isActive: !user.isActive }) }); const body = await response.json(); setNotice(response.ok ? `Usuario ${user.isActive ? "desactivado" : "activado"}.` : body.error ?? "No fue posible actualizar el usuario."); if (response.ok) await load(); };
+  return <section className="user-manager"><div className="operations-toolbar"><p>{loading ? "Actualizando usuarios…" : `${users.length} usuarios registrados`}</p><button type="button" onClick={load}><RefreshCw size={15}/> Actualizar</button></div><div className="user-grid"><form className="user-form" onSubmit={create}><h2>Crear usuario</h2><label>Nombre completo<input name="fullName" required placeholder="Nombre y apellido"/></label><label>Correo<input name="email" type="email" required placeholder="correo@empresa.com"/></label><label>Rol<select name="role" defaultValue="SELLER">{roles.map((role) => <option key={role}>{role.replaceAll("_", " ")}</option>)}</select></label><label>Contraseña temporal<input name="password" type="password" minLength={12} required aria-describedby="password-help"/><small id="password-help">Mínimo 12 caracteres. El usuario podrá cambiarla más adelante.</small></label><button type="submit"><Plus size={16}/> Crear usuario</button></form><div className="user-list">{users.map((user) => <article key={user.id}><div><strong>{user.fullName}</strong><span>{user.email} · {user.role.replaceAll("_", " ")}</span></div><button type="button" className={user.isActive ? "user-active" : "user-inactive"} onClick={() => toggle(user)}>{user.isActive ? <><UserRoundCheck size={15}/> Activo</> : <><UserRoundX size={15}/> Inactivo</>}</button></article>)}{!loading && !users.length && <p className="muted-empty">No hay usuarios disponibles o no tienes permisos de administración.</p>}</div></div>{notice && <p className="form-success" role="status">{notice}</p>}</section>;
+}
