@@ -113,6 +113,23 @@ main,
   color: #1d1d1d !important;
 }
 
+/* The desktop rail stays icon-first; its accessible name remains available. */
+@media (min-width: 761px) {
+  .sidebar-bottom > a[href="/settings"] {
+    width: 42px !important;
+    min-width: 42px;
+    height: 39px;
+    padding: 0 !important;
+    justify-content: center;
+    gap: 0;
+    border-radius: 50%;
+  }
+
+  .sidebar-bottom > a[href="/settings"] span {
+    display: none;
+  }
+}
+
 .new-button,
 .capture-button,
 .portal-rail-action,
