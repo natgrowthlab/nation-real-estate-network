@@ -1,4 +1,4 @@
-# Nexo Habitat · Real Estate Distribution Network
+# Benaq Constructora · Plataforma de operación inmobiliaria
 
 Portal comercial para una red inmobiliaria con inventario centralizado, vendedores aprobados, atribución de leads y trazabilidad hasta la comisión.
 

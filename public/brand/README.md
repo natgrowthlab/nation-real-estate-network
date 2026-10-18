@@ -1,7 +1,6 @@
-# Habita Inmobiliaria — recursos de marca
+# Benaq Constructora — recursos de marca
 
-- `habita-mark.png`: emblema maestro generado para interfaces y App Store.
-- `habita-mark.svg`: versión vectorial compacta para favicon y usos de interfaz.
-- `../icon.png`: icono de aplicación y favicon de la web.
+- `benaq-mark.png`: emblema maestro para la interfaz y el producto iOS.
+- `../icon.png`: favicon e icono de aplicación web, derivado del emblema Benaq.
 
-Paleta: Midnight `#181824`, Plum `#26253B`, Coral `#FF4A36` y Blanco `#FFFFFF`.
+Paleta: Carbón `#1D1D1D`, Arena cálida `#D97A45` y Blanco `#FFFFFF`.

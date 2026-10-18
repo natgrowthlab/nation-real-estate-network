@@ -3,8 +3,8 @@ import "./globals.css";
 import "./final-overrides.css";
 
 export const metadata: Metadata = {
-  title: "Nexo Inmobiliaria | Red de distribución inmobiliaria",
-  description: "Una red centralizada de inventario, clientes y cierres inmobiliarios.",
+  title: "Benaq Constructora | Operación inmobiliaria",
+  description: "Inventario, clientes y cierres en una operación constructora centralizada.",
   icons: { icon: "/icon.png", apple: "/icon.png" },
 };
 
