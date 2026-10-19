@@ -1,0 +1,23 @@
+.stage {
+  height: min(510px, 64vw);
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: max(3vw, 24px);
+  top: 110px;
+  width: min(48vw, 610px);
+  z-index: 0;
+}
+
+.viewer {
+  display: block;
+  height: 100%;
+  mix-blend-mode: screen;
+  opacity: .86;
+  transform: scale(1.15);
+  width: 100%;
+}
+
+@media (max-width: 760px), (prefers-reduced-motion: reduce) {
+  .stage { display: none; }
+}
