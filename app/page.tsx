@@ -392,14 +392,14 @@ export default function PublicLanding() {
             Cuéntanos qué estás buscando. Nuestro equipo te contactará para
             compartirte información de los proyectos que mejor se ajusten a ti.
           </p>
-          <form className="skiper-quick-contact">
+          <div className="skiper-quick-contact">
             <VanishForm
               className="skiper-vanish-form"
               placeholder="Escribe tu pregunta rápida…"
               onChange={() => undefined}
               onSubmit={submitQuickWhatsapp}
             />
-          </form>
+          </div>
           <div className={styles.contactDetails}>
             <span>
               <Mail size={17} /> Información de proyectos
