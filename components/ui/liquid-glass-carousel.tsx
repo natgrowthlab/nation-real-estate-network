@@ -954,16 +954,11 @@ function createCarousel(
     const p = localPoint(e);
     const hit = panelAtPointer(p.x, p.y);
     if (!hit) return;
-    if (centeredPanel && hit.poolIdx === centeredPanel.poolIdx) {
-      pendingFocus = null;
-      openFocus();
-      return;
-    }
     userInteracted = true;
     velocity = 0;
-    target = centerForIndex(nearestIndex(scroll + hit.centerX));
+    target = centerForIndex(nearestIndex(scroll) + (centeredPanel && hit.poolIdx === centeredPanel.poolIdx ? 1 : 0));
     snapped = true;
-    pendingFocus = { srcIndex: hit.srcIndex };
+    pendingFocus = null;
     setView(false);
   }
 

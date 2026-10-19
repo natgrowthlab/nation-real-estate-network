@@ -19,6 +19,12 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@componentry": "https://componentry.dev/r/{name}.json"
+    "@componentry": "https://componentry.dev/r/{name}.json",
+    "@skiper-ui": {
+      "url": "https://skiper-ui.com/r/{name}.json",
+      "headers": {
+        "Authorization": "Bearer ${SKIPER_LICENSE_KEY}"
+      }
+    }
   }
 }
