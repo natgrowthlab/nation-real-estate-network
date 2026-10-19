@@ -841,7 +841,9 @@ function createCarousel(
   }
 
   function inputLocked() {
-    return focusState.active || entryActive || entrySettled;
+    // The public carousel is browse-only: no modal/focus state may capture
+    // the gesture after a card is tapped.
+    return false;
   }
 
   function onWheel(e: WheelEvent) {
@@ -956,7 +958,7 @@ function createCarousel(
     if (!hit) return;
     userInteracted = true;
     velocity = 0;
-    target = centerForIndex(nearestIndex(scroll) + (centeredPanel && hit.poolIdx === centeredPanel.poolIdx ? 1 : 0));
+    target = centerForIndex(centerIndex(scroll) + (centeredPanel && hit.poolIdx === centeredPanel.poolIdx ? 1 : 0));
     snapped = true;
     pendingFocus = null;
     setView(false);

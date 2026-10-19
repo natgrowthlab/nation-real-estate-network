@@ -24,7 +24,6 @@ import { LiquidGlassCarousel } from "../components/ui/liquid-glass-carousel";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
 import { RollingText } from "../src/components/ui/skiper-ui/skiper27";
-import { VanishForm } from "../src/components/ui/skiper-ui/skiper56";
 import { HoverMember } from "../src/components/ui/skiper-ui/skiper6";
 
 const projects = [
@@ -91,16 +90,6 @@ export default function PublicLanding() {
     } catch {
       setFormStatus("error");
     }
-  }
-  function submitQuickWhatsapp(event: FormEvent<HTMLFormElement>) {
-    const message = new FormData(event.currentTarget)
-      .get("quickMessage")
-      ?.toString()
-      .trim();
-    if (message)
-      window.location.assign(
-        `https://wa.me/573104590887?text=${encodeURIComponent(`Hola Benaq, quiero conocer sus proyectos. ${message}`)}`,
-      );
   }
   return (
     <main className={styles.page} style={{ display: "block", width: "100%" }}>
@@ -216,7 +205,7 @@ export default function PublicLanding() {
             panelHeight={360}
             gap={20}
             background="#f8faf7"
-            entry={true}
+            entry={false}
             onActiveChange={setSelectedProject}
           />
         </div>
@@ -392,14 +381,6 @@ export default function PublicLanding() {
             Cuéntanos qué estás buscando. Nuestro equipo te contactará para
             compartirte información de los proyectos que mejor se ajusten a ti.
           </p>
-          <div className="skiper-quick-contact">
-            <VanishForm
-              className="skiper-vanish-form"
-              placeholder="Escribe tu pregunta rápida…"
-              onChange={() => undefined}
-              onSubmit={submitQuickWhatsapp}
-            />
-          </div>
           <div className={styles.contactDetails}>
             <span>
               <Mail size={17} /> Información de proyectos
