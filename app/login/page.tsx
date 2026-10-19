@@ -12,7 +12,7 @@ export default function LoginPage() {
     event.preventDefault(); setLoading(true); setError("");
     const form = new FormData(event.currentTarget);
     const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(form)) });
-    if (response.ok) window.location.assign("/");
+    if (response.ok) window.location.assign("/dashboard");
     else setError((await response.json()).error ?? "No fue posible iniciar sesión.");
     setLoading(false);
   }

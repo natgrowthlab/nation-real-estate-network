@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySession } from "./src/auth/session";
 
-const openPaths = ["/login", "/setup"];
+const openPaths = ["/", "/login", "/setup"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
