@@ -43,11 +43,14 @@ function RollingText({
   className = " text-5xl  sm:text-7xl lg:text-8xl  font-bold",
   duration = 4,
 }: RollingTextProps) {
+  const words = text.split(" ");
   const centerIndex = Math.floor(text.length / 2);
 
   return (
     <motion.div className={`font-custom flex ${className}`}>
-      {text.split("").map((letter, index) => {
+      {words.map((word, wordIndex) => (
+        <span className="skiper-rolling-word" key={`${word}-${wordIndex}`}>
+        {word.split("").map((letter, index) => {
         const distanceFromCenter = Math.abs(index - centerIndex);
         const delay = distanceFromCenter * speed;
         const rollDuration = 0.2 + distanceFromCenter * 0.15;
@@ -55,7 +58,7 @@ function RollingText({
         const totalMovement = numberOfRolls * 1.2;
 
         return (
-          <div
+          <span
             key={index}
             className="relative inline-block overflow-hidden"
             style={{ height: "1em" }}
@@ -83,9 +86,11 @@ function RollingText({
                   </span>
                 ))}
             </motion.h1>
-          </div>
+          </span>
         );
       })}
+      </span>
+      ))}
     </motion.div>
   );
 }
