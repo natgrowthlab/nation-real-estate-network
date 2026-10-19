@@ -20,11 +20,10 @@ import { FormEvent, useState } from "react";
 import styles from "./landing.module.css";
 import "./liquid-glass-carousel.css";
 import { SplineHero } from "../src/components/spline-hero";
-import { LiquidGlassCarousel } from "../components/ui/liquid-glass-carousel";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
 import { RollingText } from "../src/components/ui/skiper-ui/skiper27";
-import { HoverMember } from "../src/components/ui/skiper-ui/skiper6";
+import { Skiper6ProjectCarousel } from "../src/components/ui/skiper-ui/skiper6";
 
 const projects = [
   {
@@ -195,20 +194,7 @@ export default function PublicLanding() {
             encontrar una oportunidad coherente con tu momento y tus metas.
           </p>
         </div>
-        <div className="glass-carousel-shell">
-          <LiquidGlassCarousel
-            items={projects.map(({ name, image }) => ({
-              title: name,
-              src: image,
-              aspect: 1.5,
-            }))}
-            panelHeight={360}
-            gap={20}
-            background="#f8faf7"
-            entry={false}
-            onActiveChange={setSelectedProject}
-          />
-        </div>
+        <Skiper6ProjectCarousel projects={projects.map(({ name, image, place }) => ({ name, image, label: place }))} active={selectedProject} onActiveChange={setSelectedProject}/>
         <div className={styles.projectLayout}>
           <div className={styles.projectList}>
             {projects.map((item, index) => (
@@ -330,7 +316,6 @@ export default function PublicLanding() {
             edificios. Es entender las decisiones que hacen posible una vida
             bien vivida y responder con espacios honestos, útiles y duraderos.
           </p>
-          <HoverMember defaultName="BENAQ" teamMembers={[{ name: "Criterio", image: "/brand/project-ladera.png" }, { name: "Vida real", image: "/brand/project-atria.png" }, { name: "Claridad", image: "/brand/project-verde-alto.png" }]} />
           <ol>
             <li>
               <span>01</span>
