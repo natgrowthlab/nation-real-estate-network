@@ -22,7 +22,6 @@ import "./liquid-glass-carousel.css";
 import { SplineHero } from "../src/components/spline-hero";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
-import { RollingText } from "../src/components/ui/skiper-ui/skiper27";
 import { Skiper6ProjectCarousel } from "../src/components/ui/skiper-ui/skiper6";
 
 const projects = [
@@ -137,20 +136,9 @@ export default function PublicLanding() {
         <div className={styles.heroContent}>
           <p className={styles.eyebrow}>BENAQ CONSTRUCTORA · COLOMBIA</p>
           <h1 id="hero-title">
-            <RollingText
-              text="Espacios con intención."
-              speed={0.018}
-              duration={1.65}
-              className="skiper-hero-title"
-            />
-            <em>
-              <RollingText
-                text="Decisiones con futuro."
-                speed={0.018}
-                duration={1.75}
-                className="skiper-hero-title skiper-hero-italic"
-              />
-            </em>
+            <TextReveal>Espacios con intención.</TextReveal>
+            <br />
+            <em><TextReveal delay={130}>Decisiones con futuro.</TextReveal></em>
           </h1>
           <p className={styles.heroText}>
             <TextReveal delay={260}>
