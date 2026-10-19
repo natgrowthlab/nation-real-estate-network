@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./final-overrides.css";
-import "./marketing.css";
-import "./marketing-design.css";
 
 export const metadata: Metadata = {
-  title: "Benaq Constructora | Operación inmobiliaria",
-  description: "Inventario, clientes y cierres en una operación constructora centralizada.",
+  title: "Benaq Constructora | Vivienda e inversión",
+  description: "Conoce oportunidades de vivienda e inversión de Benaq Constructora.",
   icons: { icon: "/icon.png", apple: "/icon.png" },
 };
 
