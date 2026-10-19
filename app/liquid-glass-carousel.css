@@ -40,3 +40,5 @@
 
 @media (min-width: 640px) { .glass-carousel-shell .sm\:text-\[17px\] { font-size: 17px; } .glass-carousel-shell .sm\:text-\[15px\] { font-size: 15px; } }
 @media (max-width: 760px) { .glass-carousel-shell { height: 390px; margin-top: 28px; border-radius: 15px; } .glass-carousel-shell .min-h-\[420px\] { min-height: 390px; } }
+
+.whatsappHint, .contactForm > p { grid-column:1/-1; margin:0; color:#67716d; font-size:12px; line-height:1.45; }
