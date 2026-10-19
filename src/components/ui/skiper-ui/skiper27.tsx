@@ -79,7 +79,7 @@ function RollingText({
                     className="flex shrink-0 items-center justify-center"
                     style={{ height: "1.2em" }}
                   >
-                    {letter}
+                    {letter === " " ? "\u00A0" : letter}
                   </span>
                 ))}
             </motion.h1>
