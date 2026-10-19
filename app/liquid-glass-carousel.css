@@ -42,3 +42,14 @@
 @media (max-width: 760px) { .glass-carousel-shell { height: 390px; margin-top: 28px; border-radius: 15px; } .glass-carousel-shell .min-h-\[420px\] { min-height: 390px; } }
 
 .whatsappHint, .contactForm > p { grid-column:1/-1; margin:0; color:#67716d; font-size:12px; line-height:1.45; }
+
+/* Public-facing copy stays legible across compact and wide viewports. */
+main[class*="page"] { font-family: Inter, Arial, sans-serif; }
+main[class*="page"] :is(.navigation a, [class*="heroText"], [class*="sectionHeading"] > p, [class*="projectInfo"] > p, [class*="aboutCopy"] > p, [class*="contactIntro"] > p) { font-size:clamp(15px, 1.15vw, 18px); line-height:1.6; }
+main[class*="page"] :is(h1, h2, h3) { letter-spacing:-.022em; line-height:1.07; }
+main[class*="page"] [class*="eyebrow"], main[class*="page"] [class*="projectNumber"], main[class*="page"] [class*="projectStatus"] { letter-spacing:.1em; }
+main[class*="page"] [class*="contactForm"] label { font-size:14px; line-height:1.4; }
+main[class*="page"] [class*="contactForm"] :is(input, select, textarea) { font-size:16px; line-height:1.45; }
+main[class*="loginShell"] :is(.auth-aside h1, .auth-card h2) { letter-spacing:-.02em; line-height:1.14; }
+main[class*="loginShell"] :is(.auth-aside p, .auth-card label, .auth-card input, .auth-submit, .setup-link) { font-size:clamp(14px, 1.1vw, 16px); line-height:1.5; }
+@media (max-width:760px) { main[class*="page"] [class*="heroText"] { font-size:17px; line-height:1.6; } main[class*="page"] :is([class*="projectCard"] p, [class*="projectSpecs"] span, [class*="contactDetails"] span, [class*="benefits"] p) { font-size:14px; line-height:1.55; } main[class*="page"] [class*="hero"] h1 { letter-spacing:-.016em; line-height:1.1; } }
