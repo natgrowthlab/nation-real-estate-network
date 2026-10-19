@@ -1,0 +1,7 @@
+.workspace-list article { position: relative; }
+.workspace-list article.workspace-current { border-color: #c9a089; box-shadow: 0 0 0 2px rgba(200, 103, 59, .12); }
+.workspace-list article > div:nth-child(2) { min-width: 0; flex: 1; }
+.workspace-active { align-items: center; color: #9c4f2e !important; display: inline-flex !important; font-size: 10px !important; font-weight: 800; gap: 4px; margin-top: 8px !important; }
+.workspace-delete { align-items: center; background: transparent !important; border: 1px solid #e7d9d0 !important; border-radius: 9px !important; color: #9d422a !important; display: inline-flex !important; flex: 0 0 auto; height: 36px !important; justify-content: center; padding: 0 !important; width: 36px; }
+.workspace-delete:hover:not(:disabled) { background: #fff0ea !important; border-color: #d99070 !important; }
+.workspace-delete:disabled { cursor: wait; opacity: .65; }

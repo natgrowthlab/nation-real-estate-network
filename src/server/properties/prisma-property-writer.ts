@@ -7,6 +7,7 @@ export class PrismaPropertyWriter implements PropertyWriter {
   async create(input: CreatePropertyInput): Promise<{ id: string; code: string }> {
     return this.db.property.create({
       data: {
+        workspaceId: input.workspaceId,
         code: input.code,
         title: input.title,
         city: input.city,

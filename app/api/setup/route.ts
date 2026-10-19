@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   try {
     const user = await db.$transaction(async (tx) => {
       if (await tx.user.count()) return null;
-      return tx.user.create({ data: { fullName: body.data.fullName, email: body.data.email.toLowerCase(), passwordHash: await hashPassword(body.data.password), role: "SUPER_ADMIN" } });
+      return tx.user.create({ data: { fullName: body.data.fullName, email: body.data.email.toLowerCase(), passwordHash: await hashPassword(body.data.password), role: "SUPER_ADMIN", workspaceMemberships: { create: { role: "OWNER", workspace: { create: { name: "Espacio principal", slug: "espacio-principal", setting: { create: {} } } } } } } });
     }, { isolationLevel: "Serializable" });
     if (!user) return NextResponse.json({ error: "La cuenta inicial ya fue configurada." }, { status: 409 });
     await db.auditEvent.create({ data: { actorUserId: user.id, actorRole: "SUPER_ADMIN", action: "PLATFORM_BOOTSTRAPPED", entityType: "USER", entityId: user.id, metadata: { email: user.email } } });

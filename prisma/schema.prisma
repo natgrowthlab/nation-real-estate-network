@@ -136,6 +136,14 @@ model Workspace {
   updatedAt   DateTime          @updatedAt
   memberships WorkspaceMember[]
   setting     WorkspaceSetting?
+  owners      Owner[]
+  properties  Property[]
+  leads       Lead[]
+  appointments Appointment[]
+  offers      Offer[]
+  deals       Deal[]
+  commissionRules CommissionRule[]
+  auditEvents AuditEvent[]
 }
 
 model WorkspaceMember {
@@ -183,19 +191,23 @@ model SellerProfile {
 
 model Owner {
   id          String          @id @default(uuid())
+  workspaceId String
   legalName   String
   email       String?
   phone       String?
   kycStatus   String          @default("PENDING")
   archivedAt  DateTime?
   properties  PropertyOwner[]
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+  @@index([workspaceId, createdAt])
 }
 
 model Property {
   id               String          @id @default(uuid())
-  code             String          @unique
+  workspaceId      String
+  code             String
   title            String
   city             String
   neighborhood     String
@@ -215,8 +227,11 @@ model Property {
   media            PropertyMedia[]
   commissionRules  CommissionRule[]
   appointments     Appointment[]
+  workspace        Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
+  @@unique([workspaceId, code])
+  @@index([workspaceId, createdAt])
 }
 
 model PropertyOwner {
@@ -225,8 +240,8 @@ model PropertyOwner {
   ownershipPercentage Decimal  @db.Decimal(5, 2)
   isPrimaryContact    Boolean  @default(false)
   isSignatory         Boolean  @default(false)
-  property            Property @relation(fields: [propertyId], references: [id])
-  owner               Owner    @relation(fields: [ownerId], references: [id])
+  property            Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  owner               Owner    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   @@id([propertyId, ownerId])
 }
 
@@ -236,15 +251,16 @@ model PropertyMedia {
   storageKey String
   altText    String
   position   Int      @default(0)
-  property   Property @relation(fields: [propertyId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
 }
 
 model Lead {
   id              String    @id @default(uuid())
+  workspaceId     String
   fullName        String
-  normalizedPhone String?   @unique
-  normalizedEmail String?   @unique
+  normalizedPhone String?
+  normalizedEmail String?
   stage           LeadStage @default(NEW)
   originSource    String
   originSellerId  String?
@@ -253,8 +269,12 @@ model Lead {
   archivedAt      DateTime?
   currentSeller   SellerProfile? @relation("CurrentSeller", fields: [currentSellerId], references: [id])
   attributions    LeadAttribution[]
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  @@unique([workspaceId, normalizedPhone])
+  @@unique([workspaceId, normalizedEmail])
+  @@index([workspaceId, createdAt])
 }
 
 model LeadAttribution {
@@ -265,56 +285,69 @@ model LeadAttribution {
   action    LeadAttributionAction
   reason    String?
   createdAt DateTime               @default(now())
-  lead      Lead                   @relation(fields: [leadId], references: [id], onDelete: Restrict)
+  lead      Lead                   @relation(fields: [leadId], references: [id], onDelete: Cascade)
   seller    SellerProfile?         @relation("AttributionSeller", fields: [sellerId], references: [id])
   @@index([leadId, createdAt])
 }
 
 model Appointment {
   id         String            @id @default(uuid())
+  workspaceId String
   propertyId String
   leadId     String
   startsAt   DateTime
   status     AppointmentStatus @default(REQUESTED)
-  property   Property          @relation(fields: [propertyId], references: [id])
+  property   Property          @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  workspace  Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt  DateTime          @default(now())
   updatedAt  DateTime          @updatedAt
+  @@index([workspaceId, startsAt])
 }
 
 model Offer {
   id         String      @id @default(uuid())
+  workspaceId String
   propertyId String
   leadId     String
   amount     Decimal     @db.Decimal(16, 2)
   currency   String      @default("COP")
   status     OfferStatus @default(SUBMITTED)
+  workspace  Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  @@index([workspaceId, createdAt])
 }
 
 model Deal {
   id         String    @id @default(uuid())
+  workspaceId String
   propertyId String
   leadId     String
   stage      DealStage @default(PRE_CLOSING)
+  workspace  Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   closedAt   DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  @@index([workspaceId, updatedAt])
 }
 
 model CommissionRule {
   id                String   @id @default(uuid())
+  workspaceId       String
   propertyId        String
   sellerPercentage  Decimal  @db.Decimal(5, 2)
   companyPercentage Decimal  @db.Decimal(5, 2)
   effectiveFrom     DateTime @default(now())
   effectiveTo       DateTime?
-  property          Property @relation(fields: [propertyId], references: [id])
+  property          Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  workspace         Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt         DateTime @default(now())
+  @@index([workspaceId, effectiveFrom])
 }
 
 model AuditEvent {
   id         String   @id @default(uuid())
+  workspaceId String?
   actorUserId String?
   actorRole  UserRole?
   action     String
@@ -323,6 +356,8 @@ model AuditEvent {
   metadata   Json     @default("{}")
   createdAt  DateTime @default(now())
   actor      User?    @relation("AuditActor", fields: [actorUserId], references: [id])
+  workspace  Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   @@index([entityType, entityId, createdAt])
   @@index([actorUserId, createdAt])
+  @@index([workspaceId, createdAt])
 }

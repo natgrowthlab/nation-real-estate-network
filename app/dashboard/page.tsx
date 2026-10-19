@@ -40,7 +40,7 @@ export default function HomePage() {
   const activeLeads = data.leads.filter((lead) => !["LOST", "INVALID", "DUPLICATE", "DORMANT"].includes(lead.stage));
   const negotiating = data.offers.filter((offer) => ["SUBMITTED", "UNDER_REVIEW", "COUNTERED"].includes(offer.status));
   const notifications = [...data.appointments.filter((item) => item.status === "REQUESTED").map((item) => ({ id: `visit-${item.id}`, text: `Solicitud de visita para ${item.property.title}` })), ...data.offers.filter((item) => ["SUBMITTED", "COUNTERED"].includes(item.status)).map((item) => ({ id: `offer-${item.id}`, text: `Oferta ${item.status === "COUNTERED" ? "con contraoferta" : "pendiente de revisión"}` }))];
-  const selectWorkspace = async (workspaceId: string) => { const response = await fetch("/api/workspaces/active", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ workspaceId }) }); if (response.ok) setActiveWorkspaceId(workspaceId); setWorkspaceOpen(false); };
+  const selectWorkspace = async (workspaceId: string) => { const response = await fetch("/api/workspaces/active", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ workspaceId }) }); if (response.ok) { setActiveWorkspaceId(workspaceId); window.location.reload(); return; } setWorkspaceOpen(false); };
   const logout = async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.assign("/login"); };
 
   return <><a className="skip-link" href="#dashboard-content">Ir al contenido principal</a><main>

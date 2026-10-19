@@ -1,7 +1,7 @@
 import { assertCan, type Role } from "../auth/permissions";
 import type { AuditService } from "../audit/audit-service";
 
-export type CreatePropertyInput = { code: string; title: string; city: string; neighborhood: string; address: string; propertyType: string; salePrice: string; ownerId: string; imageDataUrl?: string };
+export type CreatePropertyInput = { workspaceId: string; code: string; title: string; city: string; neighborhood: string; address: string; propertyType: string; salePrice: string; ownerId: string; imageDataUrl?: string };
 export interface PropertyWriter { create(input: CreatePropertyInput): Promise<{ id: string; code: string }>; }
 
 export class PropertyService {

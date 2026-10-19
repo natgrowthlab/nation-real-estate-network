@@ -1,0 +1,26 @@
+/* Extra breathing room for Provicali display typography without changing the brand voice. */
+.welcome h1,
+.module-heading h1,
+main[style] h1,
+main[style] h2 {
+  letter-spacing: -.018em !important;
+  line-height: 1.08 !important;
+}
+
+.welcome h1,
+.module-heading h1 {
+  font-weight: 500 !important;
+}
+
+.module-heading > div > p:last-child,
+.intro,
+.create-card > p,
+.workspace-list span {
+  letter-spacing: 0 !important;
+  line-height: 1.6 !important;
+}
+
+@media (max-width: 760px) {
+  .welcome h1,
+  .module-heading h1 { letter-spacing: -.012em !important; line-height: 1.12 !important; }
+}

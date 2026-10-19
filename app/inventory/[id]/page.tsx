@@ -5,11 +5,13 @@ import { PortalScreen } from "../../../src/components/portal-screen";
 import { discloseProperty } from "../../../src/domain/properties/disclosure";
 import { requireUser } from "../../../src/server/auth/require-user";
 import { db } from "../../../src/server/db";
+import { getActiveWorkspaceId } from "../../../src/server/workspaces/active-workspace";
 
 export default async function PropertyProfile({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireUser("property:read");
+  const workspaceId = await getActiveWorkspaceId(user.id);
   const { id } = await params;
-  const property = await db.property.findFirst({ where: { id, archivedAt: null }, include: { owners: { include: { owner: true } }, media: { orderBy: { position: "asc" } } } });
+  const property = workspaceId ? await db.property.findFirst({ where: { id, workspaceId, archivedAt: null }, include: { owners: { include: { owner: true } }, media: { orderBy: { position: "asc" } } } }) : null;
   if (!property) notFound();
   const view = discloseProperty({ id: property.id, code: property.code, title: property.title, city: property.city, neighborhood: property.neighborhood, address: property.address, salePrice: property.salePrice.toString(), currency: property.currency, description: property.description, disclosureLevel: property.disclosureLevel, owner: { legalName: property.owners[0]?.owner.legalName ?? "", email: property.owners[0]?.owner.email ?? null, phone: property.owners[0]?.owner.phone ?? null } }, { role: user.role });
   const price = new Intl.NumberFormat("es-CO", { style: "currency", currency: view.currency, maximumFractionDigits: 0 }).format(Number(view.salePrice));

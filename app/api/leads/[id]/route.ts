@@ -4,19 +4,22 @@ import { authorizationResponse, requireUser } from "../../../../src/server/auth/
 import { db } from "../../../../src/server/db";
 import { AuditService } from "../../../../src/domain/audit/audit-service";
 import { PrismaAuditWriter } from "../../../../src/server/audit/prisma-audit-writer";
+import { getActiveWorkspaceId } from "../../../../src/server/workspaces/active-workspace";
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await requireUser("lead:create");
+    const workspaceId = await getActiveWorkspaceId(user.id);
+    if (!workspaceId) return NextResponse.json({ error: "Selecciona un espacio de trabajo." }, { status: 409 });
     const { id } = await params;
-    const lead = await db.lead.findUnique({ where: { id }, select: { id: true, fullName: true, currentSellerId: true, archivedAt: true } });
+    const lead = await db.lead.findFirst({ where: { id, workspaceId }, select: { id: true, fullName: true, currentSellerId: true, archivedAt: true } });
     if (!lead || lead.archivedAt) return NextResponse.json({ error: "El cliente no existe." }, { status: 404 });
     if (!can(user.role, "lead:read_all")) {
       const seller = await db.sellerProfile.findUnique({ where: { userId: user.id }, select: { id: true } });
       if (!seller || lead.currentSellerId !== seller.id) return NextResponse.json({ error: "No puedes eliminar este cliente." }, { status: 403 });
     }
     await db.lead.update({ where: { id }, data: { archivedAt: new Date() } });
-    await new AuditService(new PrismaAuditWriter(db)).record({ actorUserId: user.id, actorRole: user.role, action: "LEAD_ARCHIVED", entityType: "LEAD", entityId: id, metadata: { fullName: lead.fullName } });
+    await new AuditService(new PrismaAuditWriter(db)).record({ actorUserId: user.id, actorRole: user.role, action: "LEAD_ARCHIVED", entityType: "LEAD", entityId: id, metadata: { fullName: lead.fullName, workspaceId } });
     return NextResponse.json({ ok: true });
   } catch (error) {
     const auth = authorizationResponse(error);

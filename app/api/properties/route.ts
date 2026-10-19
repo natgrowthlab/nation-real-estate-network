@@ -7,6 +7,7 @@ import { PrismaAuditWriter } from "../../../src/server/audit/prisma-audit-writer
 import { db } from "../../../src/server/db";
 import { PrismaPropertyWriter } from "../../../src/server/properties/prisma-property-writer";
 import { AuditService } from "../../../src/domain/audit/audit-service";
+import { getActiveWorkspaceId } from "../../../src/server/workspaces/active-workspace";
 
 const propertySchema = z.object({
   code: z.string().trim().toUpperCase().regex(/^NT-[A-Z0-9-]{3,30}$/),
@@ -30,8 +31,10 @@ async function readPropertyRequest(request: Request) {
 export async function GET() {
   try {
     const user = await requireUser("property:read");
+    const workspaceId = await getActiveWorkspaceId(user.id);
+    if (!workspaceId) return NextResponse.json({ properties: [] });
     const properties = await db.property.findMany({
-      where: { archivedAt: null, ...(user.role === "SELLER" ? { status: "ACTIVE" } : {}) },
+      where: { workspaceId, archivedAt: null, ...(user.role === "SELLER" ? { status: "ACTIVE" } : {}) },
       include: { owners: { include: { owner: true } }, media: { orderBy: { position: "asc" }, take: 1 } }, orderBy: { createdAt: "desc" }, take: 50,
     });
     const response = properties.map((property) => ({ ...discloseProperty({
@@ -49,15 +52,17 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const user = await requireUser("property:create");
+    const workspaceId = await getActiveWorkspaceId(user.id);
+    if (!workspaceId) return NextResponse.json({ error: "Selecciona o crea un espacio de trabajo antes de registrar inmuebles." }, { status: 409 });
     const { input, image } = await readPropertyRequest(request);
     const parsed = propertySchema.safeParse(input);
     if (!parsed.success) return NextResponse.json({ error: "Revisa los datos del inmueble." }, { status: 400 });
     if (image && (!acceptedImageTypes.includes(image.type) || image.size > maxImageBytes)) return NextResponse.json({ error: "La imagen debe ser JPG, PNG o WebP y pesar máximo 2 MB." }, { status: 400 });
-    const owner = await db.owner.findFirst({ where: { id: parsed.data.ownerId, archivedAt: null }, select: { id: true } });
+    const owner = await db.owner.findFirst({ where: { id: parsed.data.ownerId, workspaceId, archivedAt: null }, select: { id: true } });
     if (!owner) return NextResponse.json({ error: "El propietario no existe o está archivado." }, { status: 422 });
     const audit = new AuditService(new PrismaAuditWriter(db));
     const imageDataUrl = image ? `data:${image.type};base64,${Buffer.from(await image.arrayBuffer()).toString("base64")}` : undefined;
-    const property = await new PropertyService(new PrismaPropertyWriter(db), audit).create({ id: user.id, role: user.role }, { ...parsed.data, imageDataUrl });
+    const property = await new PropertyService(new PrismaPropertyWriter(db), audit).create({ id: user.id, role: user.role }, { ...parsed.data, workspaceId, imageDataUrl });
     return NextResponse.json(property, { status: 201 });
   } catch (error) {
     const auth = authorizationResponse(error);

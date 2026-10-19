@@ -4,9 +4,9 @@ import { z } from "zod";
 import { toWorkspaceSlug } from "../../../src/domain/workspaces/slug";
 import { authorizationResponse, requireUser } from "../../../src/server/auth/require-user";
 import { db } from "../../../src/server/db";
+import { ACTIVE_WORKSPACE_COOKIE } from "../../../src/server/workspaces/active-workspace";
 
 const workspaceSchema = z.object({ name: z.string().trim().min(2).max(100) });
-const ACTIVE_WORKSPACE_COOKIE = "nexo_active_workspace";
 
 export async function GET() {
   try {
