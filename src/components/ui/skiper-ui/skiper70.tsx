@@ -1,7 +1,20 @@
 "use client";
 
-import { motion, MotionValue, useScroll, useTransform } from "motion/react";
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useRef } from "react";
+import {
+  motion,
+  MotionValue,
+  useMotionValue,
+  useScroll,
+  useTransform,
+} from "motion/react";
+import React, {
+  ComponentPropsWithoutRef,
+  FC,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -26,6 +39,44 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
     target: containerRef,
     offset: ["start start", "end end"],
   });
+  const mobileScrollProgress = useMotionValue(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 760px)");
+    let frameId: number | undefined;
+
+    const updateProgress = () => {
+      const element = containerRef.current;
+      const mobile = mediaQuery.matches;
+      setIsMobile(mobile);
+
+      if (!mobile || !element) return;
+
+      const rect = element.getBoundingClientRect();
+      const travel = Math.max(element.offsetHeight - window.innerHeight, 1);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      mobileScrollProgress.set(progress);
+    };
+
+    const requestUpdate = () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    mediaQuery.addEventListener("change", requestUpdate);
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      mediaQuery.removeEventListener("change", requestUpdate);
+    };
+  }, [mobileScrollProgress]);
+  const progress = isMobile ? mobileScrollProgress : scrollYProgress;
 
   // Convert children to string for processing
   const textContent =
@@ -87,7 +138,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
                   return (
                     <AnimatedWord
                       key={`${lineIndex}-${wordIndex}`}
-                      progress={scrollYProgress}
+                      progress={progress}
                       wordIndex={globalWordIndex}
                       totalWords={allWords.length}
                       highlight={highlight}
