@@ -128,7 +128,7 @@ const AnimatedWord: FC<AnimatedWordProps> = ({
   highlightBgClass,
 }) => {
   // Animation parameters
-  const overlapWords = 15;
+  const overlapWords = 6;
 
   // Calculate word timing
   const wordStart = wordIndex / totalWords;
@@ -143,9 +143,6 @@ const AnimatedWord: FC<AnimatedWordProps> = ({
   const adjustedStart = wordStart * timelineScale;
   const adjustedEnd = wordEnd * timelineScale;
   const duration = adjustedEnd - adjustedStart;
-
-  // Word opacity
-  const opacity = useTransform(progress, [adjustedStart, adjustedEnd], [0.14, 1]);
 
   // Background opacity
   const bgOpacity = useTransform(
@@ -167,7 +164,6 @@ const AnimatedWord: FC<AnimatedWordProps> = ({
         "skiper70-word",
         highlight === children && highlightTextClass,
       )}
-      style={{ opacity }}
     >
       <motion.div
         className={cn(
