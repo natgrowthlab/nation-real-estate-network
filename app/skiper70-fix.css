@@ -81,13 +81,31 @@ main[class*="page"] > section#proyectos {
 
   .skiper70-reveal-compact .skiper70-sticky {
     align-items: center;
+    box-sizing: border-box;
     height: 100dvh;
     min-height: 100dvh;
     overflow: visible !important;
     padding: 2rem 0;
-    position: -webkit-sticky;
-    position: sticky !important;
+    position: absolute !important;
     top: 0 !important;
+    width: 100%;
     z-index: 1;
+  }
+
+  /* The component toggles these classes only at the beginning and end of the
+     journey. The scene therefore remains visually fixed without per-frame
+     layout work or the mobile sticky bug that was releasing it early. */
+  .skiper70-reveal-compact.is-mobile-pinned .skiper70-sticky {
+    left: 20px;
+    position: fixed !important;
+    right: 20px;
+    top: 0 !important;
+    width: auto;
+  }
+
+  .skiper70-reveal-compact.is-mobile-complete .skiper70-sticky {
+    bottom: 0;
+    position: absolute !important;
+    top: auto !important;
   }
 }

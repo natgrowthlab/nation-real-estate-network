@@ -45,6 +45,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 760px)");
     let frameId: number | undefined;
+    let mobilePhase = "before";
 
     const updateProgress = () => {
       const element = containerRef.current;
@@ -59,6 +60,31 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
       const travel = Math.max(element.offsetHeight - window.innerHeight, 1);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       mobileScrollProgress.set(progress);
+
+      // Mobile browsers are inconsistent with CSS `position: sticky` inside
+      // long animated sections. Pin only while the scroll journey is active,
+      // then anchor the scene to the end of its reserved space. This keeps the
+      // reveal centered and avoids layout changes on every scroll frame.
+      const stickyElement = element.querySelector<HTMLElement>(
+        ".skiper70-sticky",
+      );
+      if (!stickyElement) return;
+
+      const nextPhase =
+        rect.top > 0
+          ? "before"
+          : rect.bottom <= stickyElement.offsetHeight
+            ? "complete"
+            : "pinned";
+
+      if (nextPhase !== mobilePhase) {
+        element.classList.toggle("is-mobile-pinned", nextPhase === "pinned");
+        element.classList.toggle(
+          "is-mobile-complete",
+          nextPhase === "complete",
+        );
+        mobilePhase = nextPhase;
+      }
     };
 
     const requestUpdate = () => {
@@ -72,6 +98,10 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
     mediaQuery.addEventListener("change", requestUpdate);
 
     return () => {
+      containerRef.current?.classList.remove(
+        "is-mobile-pinned",
+        "is-mobile-complete",
+      );
       if (frameId) cancelAnimationFrame(frameId);
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
