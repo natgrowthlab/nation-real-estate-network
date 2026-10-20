@@ -74,11 +74,10 @@ main[class*="page"] > section#proyectos {
   }
 
   .skiper70-reveal-compact .skiper70-sticky {
-    height: 100svh;
-    min-height: 100svh;
+    height: 100dvh;
+    min-height: 100dvh;
     padding: 2rem 0;
-    position: relative;
-    top: auto;
-    will-change: transform;
+    position: sticky;
+    top: 0;
   }
 }

@@ -40,7 +40,6 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
     offset: ["start start", "end end"],
   });
   const mobileScrollProgress = useMotionValue(0);
-  const mobilePinOffset = useMotionValue(0);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -50,10 +49,9 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
     const updateProgress = () => {
       const element = containerRef.current;
       const mobile = mediaQuery.matches;
-      setIsMobile(mobile);
+      setIsMobile((previous) => (previous === mobile ? previous : mobile));
 
       if (!mobile || !element) {
-        mobilePinOffset.set(0);
         return;
       }
 
@@ -61,8 +59,6 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
       const travel = Math.max(element.offsetHeight - window.innerHeight, 1);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       mobileScrollProgress.set(progress);
-      const pinOffset = Math.min(travel, Math.max(0, -rect.top));
-      mobilePinOffset.set(pinOffset);
     };
 
     const requestUpdate = () => {
@@ -81,7 +77,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
       window.removeEventListener("resize", requestUpdate);
       mediaQuery.removeEventListener("change", requestUpdate);
     };
-  }, [mobilePinOffset, mobileScrollProgress]);
+  }, [mobileScrollProgress]);
   const progress = isMobile ? mobileScrollProgress : scrollYProgress;
 
   // Convert children to string for processing
@@ -123,10 +119,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
 
   return (
     <div ref={containerRef} className={cn("skiper70-reveal", compact && "skiper70-reveal-compact")}>
-      <motion.div
-        className="skiper70-sticky"
-        style={isMobile ? { y: mobilePinOffset } : undefined}
-      >
+      <div className="skiper70-sticky">
         <div
           className={cn(
             "skiper70-text",
@@ -162,7 +155,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
             );
           })}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
