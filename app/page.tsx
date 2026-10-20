@@ -3,13 +3,10 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BedDouble,
   Building2,
-  CalendarDays,
   ChevronRight,
   Mail,
   MapPin,
-  Maximize2,
   Menu,
   Phone,
   ShieldCheck,
@@ -19,12 +16,12 @@ import {
 import { FormEvent, useState } from "react";
 import styles from "./landing.module.css";
 import "./liquid-glass-carousel.css";
-import "./lumina.css";
 import "./skiper8-preloader.css";
+import "./skiper80-projects.css";
 import { SplineHero } from "../src/components/spline-hero";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
-import { Skiper6ProjectCarousel } from "../src/components/ui/skiper-ui/skiper6";
+import { Skiper80Projects } from "../src/components/ui/skiper-ui/skiper80";
 
 const projects = [
   {
@@ -51,11 +48,9 @@ const projects = [
 
 export default function PublicLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(0);
   const [formStatus, setFormStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
-  const project = projects[selectedProject];
   function submitContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -175,65 +170,7 @@ export default function PublicLanding() {
             encontrar una oportunidad coherente con tu momento y tus metas.
           </p>
         </div>
-        <Skiper6ProjectCarousel projects={projects.map(({ name, image, place }) => ({ name, image, label: place }))} active={selectedProject} onActiveChange={setSelectedProject}/>
-        <div className={styles.projectLayout}>
-          <div className={styles.projectList}>
-            {projects.map((item, index) => (
-              <button
-                key={item.name}
-                type="button"
-                className={`${styles.projectCard} ${selectedProject === index ? styles.projectCardActive : ""}`}
-                onClick={() => setSelectedProject(index)}
-                aria-pressed={selectedProject === index}
-              >
-                <span className={styles.projectNumber}>0{index + 1}</span>
-                <div>
-                  <span className={styles.projectStatus}>{item.status}</span>
-                  <h3>{item.name}</h3>
-                  <p>{item.place}</p>
-                </div>
-                <ArrowRight size={19} />
-              </button>
-            ))}
-          </div>
-          <article className={styles.projectDetail} aria-live="polite">
-            <div className={styles.projectVisual}>
-              <img
-                src={project.image}
-                alt={`${project.name}, ${project.place.toLowerCase()}`}
-              />
-              <span>{project.status}</span>
-            </div>
-            <div className={styles.projectInfo}>
-              <p className={styles.eyebrow}>{project.place.toUpperCase()}</p>
-              <h3>{project.name}</h3>
-              <p>{project.detail}</p>
-              <strong>{project.price}</strong>
-              <div className={styles.projectSpecs}>
-                <span>
-                  <BedDouble size={16} />
-                  {project.rooms}
-                </span>
-                <span>
-                  <Maximize2 size={16} />
-                  {project.area}
-                </span>
-                <span>
-                  <CalendarDays size={16} />
-                  {project.delivery}
-                </span>
-              </div>
-              <ul className="lumina-project-features" aria-label="Características de Lúmina">
-                {project.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
-                ))}
-              </ul>
-              <a href="#contacto" className={styles.inlineAction}>
-                Quiero recibir información de Lúmina <ArrowRight size={16} />
-              </a>
-            </div>
-          </article>
-        </div>
+        <Skiper80Projects projects={projects} />
       </section>
       <section
         id="inversion"
