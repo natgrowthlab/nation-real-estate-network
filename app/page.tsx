@@ -65,7 +65,6 @@ const projects = [
 
 export default function PublicLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [pageReady, setPageReady] = useState(false);
   const [selectedProject, setSelectedProject] = useState(0);
   const [formStatus, setFormStatus] = useState<
     "idle" | "sending" | "sent" | "error"
@@ -91,8 +90,8 @@ export default function PublicLanding() {
     }
   }
   return (
-    <main className={`${styles.page} ${pageReady ? "landing-page-ready" : "landing-page-loading"}`} style={{ display: "block", width: "100%" }}>
-      <BrandPreloader onComplete={() => setPageReady(true)} />
+    <main className={styles.page} style={{ display: "block", width: "100%" }}>
+      <BrandPreloader />
       <header className={styles.header}>
         <Link
           className={styles.brand}
