@@ -1,7 +1,7 @@
 "use client";
 
-import { Skiper10 } from "./ui/skiper-ui/skiper10";
+import { Skiper8 } from "./ui/skiper-ui/skiper8";
 
 export function BrandPreloader() {
-  return <Skiper10 />;
+  return <Skiper8 />;
 }
