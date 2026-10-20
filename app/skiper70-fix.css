@@ -67,9 +67,9 @@ main[class*="page"] > section#proyectos {
     padding-top: 52px;
   }
 
-  /* Keep a short, real scroll track so the orange covers reveal word by word. */
+  /* Reserve the full scroll journey for the reveal before the next section can enter. */
   .skiper70-reveal-compact {
-    height: 140svh;
+    height: 210dvh;
     margin-top: 0;
   }
 
