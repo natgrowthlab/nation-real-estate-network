@@ -18,10 +18,12 @@ import styles from "./landing.module.css";
 import "./liquid-glass-carousel.css";
 import "./skiper8-preloader.css";
 import "./skiper80-projects.css";
+import "./skiper70-investment.css";
 import { SplineHero } from "../src/components/spline-hero";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
 import { Skiper80Projects } from "../src/components/ui/skiper-ui/skiper80";
+import { TextBoxReveal } from "../src/components/ui/skiper-ui/skiper70";
 
 const projects = [
   {
@@ -174,51 +176,47 @@ export default function PublicLanding() {
       </section>
       <section
         id="inversion"
-        className={styles.investment}
+        className={`${styles.investment} skiper70-investment`}
         aria-labelledby="investment-title"
       >
-        <div className={styles.investmentCopy}>
-          <p className={styles.eyebrow}>MÁS QUE METROS CUADRADOS</p>
-          <h2 id="investment-title">
-            Un hogar puede ser
-            <br />
-            <em>tu próximo gran paso.</em>
-          </h2>
-          <p>
-            Te ayudamos a evaluar una compra desde lo que de verdad importa:
-            cómo quieres vivir, qué buscas proteger y hacia dónde quieres
-            crecer.
-          </p>
-          <a href="#contacto" className={styles.lightAction}>
-            Explorar oportunidades <ArrowRight size={17} />
-          </a>
+        <div className="skiper70-investment-header">
+          <div className={styles.investmentCopy}>
+            <p className={styles.eyebrow}>MÁS QUE METROS CUADRADOS</p>
+            <h2 id="investment-title">
+              Un hogar puede ser
+              <br />
+              <em>tu próximo gran paso.</em>
+            </h2>
+            <p>
+              Te ayudamos a evaluar una compra desde lo que de verdad importa:
+              cómo quieres vivir, qué buscas proteger y hacia dónde quieres
+              crecer.
+            </p>
+            <a href="#contacto" className={styles.lightAction}>
+              Explorar oportunidades <ArrowRight size={17} />
+            </a>
+          </div>
+          <div className={styles.benefits}>
+            <article>
+              <Building2 />
+              <h3>Vivienda pensada</h3>
+              <p>Diseño funcional, entornos para compartir y decisiones que se sienten en lo cotidiano.</p>
+            </article>
+            <article>
+              <TrendingUp />
+              <h3>Inversión consciente</h3>
+              <p>Alternativas para convertir una decisión inmobiliaria en una base para tus próximos proyectos.</p>
+            </article>
+            <article>
+              <ShieldCheck />
+              <h3>Acompañamiento real</h3>
+              <p>Información clara y asesoría humana durante cada paso de tu proceso.</p>
+            </article>
+          </div>
         </div>
-        <div className={styles.benefits}>
-          <article>
-            <Building2 />
-            <h3>Vivienda pensada</h3>
-            <p>
-              Diseño funcional, entornos para compartir y decisiones que se
-              sienten en lo cotidiano.
-            </p>
-          </article>
-          <article>
-            <TrendingUp />
-            <h3>Inversión consciente</h3>
-            <p>
-              Alternativas para convertir una decisión inmobiliaria en una base
-              para tus próximos proyectos.
-            </p>
-          </article>
-          <article>
-            <ShieldCheck />
-            <h3>Acompañamiento real</h3>
-            <p>
-              Información clara y asesoría humana durante cada paso de tu
-              proceso.
-            </p>
-          </article>
-        </div>
+        <TextBoxReveal compact highlight="inversión" className="skiper70-benaq-text">
+          La inversión merece claridad. En Benaq encuentras proyectos con distribución funcional, información transparente y acompañamiento humano para decidir con calma. Lúmina es una oportunidad para construir patrimonio desde una vivienda pensada para tu vida cotidiana.
+        </TextBoxReveal>
       </section>
       <section
         id="benaq"
