@@ -38,8 +38,10 @@ export function Skiper10({ duration = 2500 }: { duration?: number }) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.42, delay: 0.98, ease: "easeOut" } }}
         >
-          <div className="skiper10-copy" style={{ color: "#f36b2a" }}>
-            <img src="/brand/benaq-mark.png" alt="" />
+          <div className="skiper10-copy">
+            <span className="skiper10-logo-badge" aria-hidden="true">
+              <img src="/brand/benaq-mark.png" alt="" />
+            </span>
             <motion.h1
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: { duration: 0.7 } }}
