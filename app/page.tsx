@@ -20,6 +20,7 @@ import { FormEvent, useState } from "react";
 import styles from "./landing.module.css";
 import "./liquid-glass-carousel.css";
 import "./lumina.css";
+import "./preloader-override.css";
 import { SplineHero } from "../src/components/spline-hero";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
