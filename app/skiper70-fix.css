@@ -51,11 +51,20 @@ main[class*="page"] [class*="heroContent"] {
   z-index: 2;
 }
 
+/* Bring the first content section closer to the hero fade. */
+main[class*="page"] > section#proyectos {
+  padding-top: 78px;
+}
+
 @media (max-width: 760px) {
   main[class*="page"] > section[class*="hero"] {
     margin-inline: 0;
     padding-inline: 20px;
     width: 100%;
+  }
+
+  main[class*="page"] > section#proyectos {
+    padding-top: 52px;
   }
 
   /* Keep a short, real scroll track so the orange covers reveal word by word. */
