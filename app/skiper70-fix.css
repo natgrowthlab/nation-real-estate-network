@@ -58,21 +58,16 @@ main[class*="page"] [class*="heroContent"] {
     width: 100%;
   }
 
-  /* Mobile uses viewport entry instead of sticky scroll; avoid a long empty track. */
+  /* Keep a short, real scroll track so the orange covers reveal word by word. */
   .skiper70-reveal-compact {
-    height: auto;
-    margin-top: 28px;
+    height: 140svh;
+    margin-top: 0;
   }
 
   .skiper70-reveal-compact .skiper70-sticky {
-    height: auto;
-    min-height: 0;
-    padding: 0;
-    position: relative;
-  }
-
-  /* Remove the colored word masks once the mobile reveal has completed. */
-  .skiper70-reveal-compact .skiper70-word-cover {
-    display: none !important;
+    height: 100svh;
+    min-height: 100svh;
+    padding: 2rem 0;
+    position: sticky;
   }
 }

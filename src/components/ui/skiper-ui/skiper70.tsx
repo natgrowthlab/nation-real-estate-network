@@ -1,20 +1,7 @@
 "use client";
 
-import {
-  motion,
-  MotionValue,
-  useInView,
-  useScroll,
-  useTransform,
-} from "motion/react";
-import React, {
-  ComponentPropsWithoutRef,
-  FC,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { motion, MotionValue, useScroll, useTransform } from "motion/react";
+import React, { ComponentPropsWithoutRef, FC, ReactNode, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -39,17 +26,6 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
     target: containerRef,
     offset: ["start start", "end end"],
   });
-  const isInView = useInView(containerRef, { amount: 0.18, once: true });
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 760px)");
-    const updateViewport = () => setIsMobile(mediaQuery.matches);
-
-    updateViewport();
-    mediaQuery.addEventListener("change", updateViewport);
-    return () => mediaQuery.removeEventListener("change", updateViewport);
-  }, []);
 
   // Convert children to string for processing
   const textContent =
@@ -117,7 +93,6 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
                       highlight={highlight}
                       highlightTextClass={highlightTextClass}
                       highlightBgClass={highlightBgClass}
-                      mobileReveal={isMobile && isInView}
                     >
                       {word}
                     </AnimatedWord>
@@ -141,7 +116,6 @@ interface AnimatedWordProps {
   highlight?: string;
   highlightTextClass?: string;
   highlightBgClass?: string;
-  mobileReveal: boolean;
 }
 
 const AnimatedWord: FC<AnimatedWordProps> = ({
@@ -152,7 +126,6 @@ const AnimatedWord: FC<AnimatedWordProps> = ({
   highlight,
   highlightTextClass,
   highlightBgClass,
-  mobileReveal,
 }) => {
   // Animation parameters
   const overlapWords = 15;
@@ -187,7 +160,6 @@ const AnimatedWord: FC<AnimatedWordProps> = ({
     [adjustedStart + duration * 0.9, adjustedEnd],
     [0, 1],
   );
-  const revealDelay = Math.min(wordIndex * 0.055, 1.2);
 
   return (
     <motion.span
@@ -195,39 +167,18 @@ const AnimatedWord: FC<AnimatedWordProps> = ({
         "skiper70-word",
         highlight === children && highlightTextClass,
       )}
-      style={mobileReveal ? undefined : { opacity }}
-      initial={mobileReveal ? { opacity: 0, y: 10 } : false}
-      animate={mobileReveal ? { opacity: 1, y: 0 } : undefined}
-      transition={
-        mobileReveal
-          ? { duration: 0.32, delay: revealDelay, ease: "easeOut" }
-          : undefined
-      }
+      style={{ opacity }}
     >
       <motion.div
         className={cn(
           "skiper70-word-cover",
           highlight === children && highlightBgClass,
         )}
-        style={mobileReveal ? undefined : { opacity: bgOpacity }}
-        initial={mobileReveal ? { opacity: 1, scaleX: 1 } : false}
-        animate={mobileReveal ? { opacity: 0, scaleX: 0.35 } : undefined}
-        transition={
-          mobileReveal
-            ? { duration: 0.28, delay: revealDelay + 0.1, ease: "easeOut" }
-            : undefined
-        }
+        style={{ opacity: bgOpacity }}
       />
       <motion.span
         className={cn("relative z-10")}
-        style={mobileReveal ? undefined : { opacity: textOpacity }}
-        initial={mobileReveal ? { opacity: 0 } : false}
-        animate={mobileReveal ? { opacity: 1 } : undefined}
-        transition={
-          mobileReveal
-            ? { duration: 0.2, delay: revealDelay + 0.1, ease: "easeOut" }
-            : undefined
-        }
+        style={{ opacity: textOpacity }}
       >
         {children}
       </motion.span>
