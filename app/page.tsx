@@ -19,6 +19,7 @@ import {
 import { FormEvent, useState } from "react";
 import styles from "./landing.module.css";
 import "./liquid-glass-carousel.css";
+import "./lumina.css";
 import { SplineHero } from "../src/components/spline-hero";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
@@ -26,40 +27,24 @@ import { Skiper6ProjectCarousel } from "../src/components/ui/skiper-ui/skiper6";
 
 const projects = [
   {
-    name: "Ladera",
-    place: "Un proyecto residencial",
+    name: "Lúmina",
+    place: "Apartamentos de 59 m²",
     status: "Prelanzamiento",
-    price: "Desde COP 420 millones",
+    price: "Desde $175 millones COP",
     detail:
-      "Apartamentos pensados para acompañar cada etapa de vida, con espacios que privilegian la luz, la calma y la conexión.",
-    rooms: "1–3 habitaciones",
-    area: "48–102 m²",
-    delivery: "Consulta fechas de entrega",
-    image: "/brand/project-ladera.png",
-  },
-  {
-    name: "Atria",
-    place: "Un proyecto de inversión",
-    status: "En construcción",
-    price: "Desde COP 365 millones",
-    detail:
-      "Una alternativa para quienes buscan patrimonio con un diseño consciente, ubicaciones de alto potencial y asesoría cercana.",
-    rooms: "1–2 habitaciones",
-    area: "38–76 m²",
-    delivery: "Consulta disponibilidad",
-    image: "/brand/project-atria.png",
-  },
-  {
-    name: "Verde Alto",
-    place: "Un proyecto para habitar",
-    status: "Próxima apertura",
-    price: "Información bajo solicitud",
-    detail:
-      "Una propuesta que integra vivienda, zonas comunes y una relación más natural con el entorno cotidiano.",
-    rooms: "2–3 habitaciones",
-    area: "64–118 m²",
-    delivery: "Regístrate para novedades",
-    image: "/brand/project-verde-alto.png",
+      "Una propuesta residencial de prelanzamiento con una distribución completa para vivir con comodidad todos los días.",
+    rooms: "3 alcobas",
+    area: "59 m²",
+    delivery: "Prelanzamiento",
+    image: "/brand/project-lumina.jpg",
+    features: [
+      "Sala comedor",
+      "Alcoba principal con baño",
+      "Baño social",
+      "Cocina y patio de ropas",
+      "Balcón",
+      "Parqueadero para moto y bodega",
+    ],
   },
 ];
 
@@ -230,8 +215,13 @@ export default function PublicLanding() {
                   {project.delivery}
                 </span>
               </div>
+              <ul className="lumina-project-features" aria-label="Características de Lúmina">
+                {project.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
               <a href="#contacto" className={styles.inlineAction}>
-                Quiero recibir información <ArrowRight size={16} />
+                Quiero recibir información de Lúmina <ArrowRight size={16} />
               </a>
             </div>
           </article>
