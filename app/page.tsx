@@ -147,13 +147,6 @@ export default function PublicLanding() {
             </a>
           </div>
         </div>
-        <div className={styles.heroNote}>
-          <span>VIVIENDA · INVERSIÓN · CONFIANZA</span>
-          <p>
-            Proyectos que conectan arquitectura, ubicación y una forma cercana
-            de acompañarte.
-          </p>
-        </div>
       </section>
       <section
         id="proyectos"
@@ -217,7 +210,7 @@ export default function PublicLanding() {
           </div>
         </div>
         <TextBoxReveal compact highlight="inversión" className="skiper70-benaq-text">
-          La inversión merece claridad. En Benaq encuentras proyectos con distribución funcional, información transparente y acompañamiento humano para decidir con calma. Lúmina es una oportunidad para construir patrimonio desde una vivienda pensada para tu vida cotidiana.
+          Elegir vivienda o invertir merece claridad. En Benaq encuentras información transparente, asesoría humana y proyectos pensados para tomar decisiones con calma y construir patrimonio a tu ritmo.
         </TextBoxReveal>
       </section>
       <section

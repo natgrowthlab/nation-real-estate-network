@@ -10,3 +10,69 @@ main[class*="page"] [class*="heroContent"], main[class*="page"] [class*="heroNot
 .skiper70-investment :is(h2, h3, p, a, span, strong, em) {
   color: #20211f !important;
 }
+
+/* Shared neutral canvas after the visual hero. */
+body:has(.skiper70-investment),
+main[class*="page"] {
+  background: #f1f1f1 !important;
+}
+
+.skiper70-investment {
+  background: #f1f1f1 !important;
+}
+
+/* Keep the hero within the same 1180px content rail used by every section. */
+main[class*="page"] > section[class*="hero"] {
+  margin-inline: auto;
+  max-width: 1180px;
+  padding-inline: 28px;
+  width: calc(100% - 56px);
+}
+
+/* The fade terminates in the landing canvas, not in white. */
+.benaq-hero-fade {
+  background: linear-gradient(180deg, rgba(241, 241, 241, 0) 40%, #f1f1f1 100%);
+}
+
+main[class*="page"] > section[class*="hero"]::after {
+  background: linear-gradient(180deg, rgba(241, 241, 241, 0) 55%, #f1f1f1 100%);
+  bottom: 0;
+  content: "";
+  inset-inline: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+/* The overlay sits below all interactive hero content. */
+main[class*="page"] [class*="heroContent"] {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 760px) {
+  main[class*="page"] > section[class*="hero"] {
+    margin-inline: 20px;
+    padding-inline: 20px;
+    width: calc(100% - 40px);
+  }
+
+  /* Mobile uses viewport entry instead of sticky scroll; avoid a long empty track. */
+  .skiper70-reveal-compact {
+    height: auto;
+    margin-top: 28px;
+  }
+
+  .skiper70-reveal-compact .skiper70-sticky {
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  /* Remove the colored word masks once the mobile reveal has completed. */
+  .skiper70-reveal-compact .skiper70-word-cover {
+    display: none !important;
+  }
+}
