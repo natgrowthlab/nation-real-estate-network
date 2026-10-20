@@ -45,9 +45,9 @@
 .whatsappHint, .contactForm > p { grid-column:1/-1; margin:0; color:#67716d; font-size:12px; line-height:1.45; }
 
 /* Public-facing copy stays legible across compact and wide viewports. */
-main[class*="page"] { font-family: Inter, Arial, sans-serif; }
+main[class*="page"] { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
 main[class*="page"] :is(.navigation a, [class*="heroText"], [class*="sectionHeading"] > p, [class*="projectInfo"] > p, [class*="aboutCopy"] > p, [class*="contactIntro"] > p) { font-size:clamp(15px, 1.15vw, 18px); line-height:1.6; }
-main[class*="page"] :is(h1, h2, h3) { letter-spacing:-.022em; line-height:1.07; }
+main[class*="page"] :is(h1, h2, h3) { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-weight:700; letter-spacing:-.035em; line-height:1.07; }
 main[class*="page"] [class*="eyebrow"], main[class*="page"] [class*="projectNumber"], main[class*="page"] [class*="projectStatus"] { letter-spacing:.1em; }
 main[class*="page"] [class*="contactForm"] label { font-size:14px; line-height:1.4; }
 main[class*="page"] [class*="contactForm"] :is(input, select, textarea) { font-size:16px; line-height:1.45; }
