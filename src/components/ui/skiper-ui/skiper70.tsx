@@ -40,8 +40,8 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
     offset: ["start start", "end end"],
   });
   const mobileScrollProgress = useMotionValue(0);
+  const mobilePinOffset = useMotionValue(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [mobilePinOffset, setMobilePinOffset] = useState(0);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 760px)");
@@ -53,7 +53,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
       setIsMobile(mobile);
 
       if (!mobile || !element) {
-        setMobilePinOffset(0);
+        mobilePinOffset.set(0);
         return;
       }
 
@@ -62,11 +62,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       mobileScrollProgress.set(progress);
       const pinOffset = Math.min(travel, Math.max(0, -rect.top));
-      setMobilePinOffset((previousOffset) =>
-        Math.abs(previousOffset - pinOffset) > 0.5
-          ? pinOffset
-          : previousOffset,
-      );
+      mobilePinOffset.set(pinOffset);
     };
 
     const requestUpdate = () => {
@@ -85,7 +81,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
       window.removeEventListener("resize", requestUpdate);
       mediaQuery.removeEventListener("change", requestUpdate);
     };
-  }, [mobileScrollProgress]);
+  }, [mobilePinOffset, mobileScrollProgress]);
   const progress = isMobile ? mobileScrollProgress : scrollYProgress;
 
   // Convert children to string for processing
@@ -127,13 +123,9 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
 
   return (
     <div ref={containerRef} className={cn("skiper70-reveal", compact && "skiper70-reveal-compact")}>
-      <div
+      <motion.div
         className="skiper70-sticky"
-        style={
-          isMobile
-            ? { transform: `translateY(${mobilePinOffset}px)` }
-            : undefined
-        }
+        style={isMobile ? { y: mobilePinOffset } : undefined}
       >
         <div
           className={cn(
@@ -170,7 +162,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

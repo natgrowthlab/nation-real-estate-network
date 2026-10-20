@@ -79,5 +79,6 @@ main[class*="page"] > section#proyectos {
     padding: 2rem 0;
     position: relative;
     top: auto;
+    will-change: transform;
   }
 }
