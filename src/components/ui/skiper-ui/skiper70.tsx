@@ -137,7 +137,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
                   );
                   return (
                     <AnimatedWord
-                      key={`${lineIndex}-${wordIndex}`}
+                      key={`${isMobile ? "mobile" : "desktop"}-${lineIndex}-${wordIndex}`}
                       progress={progress}
                       wordIndex={globalWordIndex}
                       totalWords={allWords.length}
