@@ -77,19 +77,7 @@ main[class*="page"] > section#proyectos {
     height: 100svh;
     min-height: 100svh;
     padding: 2rem 0;
-    position: sticky;
-  }
-
-  /* Explicitly pin the reading layer on mobile while the word reveal is active. */
-  .skiper70-reveal-compact .skiper70-mobile-pinned {
-    background: #f1f1f1;
-    inset-block: 0;
-    left: 50%;
-    margin: 0;
-    max-width: 896px;
-    position: fixed;
-    transform: translateX(-50%);
-    width: calc(100% - 40px);
-    z-index: 4;
+    position: relative;
+    top: auto;
   }
 }
