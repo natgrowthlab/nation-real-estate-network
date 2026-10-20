@@ -19,6 +19,7 @@ import "./liquid-glass-carousel.css";
 import "./skiper8-preloader.css";
 import "./skiper80-projects.css";
 import "./skiper70-investment.css";
+import "./skiper70-fix.css";
 import { SplineHero } from "../src/components/spline-hero";
 import { BrandPreloader } from "../src/components/brand-preloader";
 import { TextReveal } from "../src/components/text-reveal";
@@ -123,6 +124,7 @@ export default function PublicLanding() {
       </header>
       <section className={styles.hero} aria-labelledby="hero-title">
         <SplineHero />
+        <div className="benaq-hero-fade" aria-hidden="true" />
         <div className={styles.heroContent}>
           <p className={styles.eyebrow}>BENAQ CONSTRUCTORA · COLOMBIA</p>
           <h1 id="hero-title">

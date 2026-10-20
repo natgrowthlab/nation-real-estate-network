@@ -145,7 +145,7 @@ const AnimatedWord: FC<AnimatedWordProps> = ({
   const duration = adjustedEnd - adjustedStart;
 
   // Word opacity
-  const opacity = useTransform(progress, [adjustedStart, adjustedEnd], [0, 1]);
+  const opacity = useTransform(progress, [adjustedStart, adjustedEnd], [0.14, 1]);
 
   // Background opacity
   const bgOpacity = useTransform(
