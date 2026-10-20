@@ -41,6 +41,7 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
   });
   const mobileScrollProgress = useMotionValue(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMobilePinned, setIsMobilePinned] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 760px)");
@@ -51,12 +52,18 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
       const mobile = mediaQuery.matches;
       setIsMobile(mobile);
 
-      if (!mobile || !element) return;
+      if (!mobile || !element) {
+        setIsMobilePinned(false);
+        return;
+      }
 
       const rect = element.getBoundingClientRect();
       const travel = Math.max(element.offsetHeight - window.innerHeight, 1);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       mobileScrollProgress.set(progress);
+      setIsMobilePinned(
+        rect.top <= 0 && rect.bottom >= window.innerHeight,
+      );
     };
 
     const requestUpdate = () => {
@@ -117,7 +124,12 @@ export const TextBoxReveal: FC<TextBoxRevealProps> = ({
 
   return (
     <div ref={containerRef} className={cn("skiper70-reveal", compact && "skiper70-reveal-compact")}>
-      <div className="skiper70-sticky">
+      <div
+        className={cn(
+          "skiper70-sticky",
+          isMobilePinned && "skiper70-mobile-pinned",
+        )}
+      >
         <div
           className={cn(
             "skiper70-text",
