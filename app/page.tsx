@@ -424,8 +424,7 @@ export default function PublicLanding() {
           )}
           {formStatus === "error" && (
             <p className={styles.error} role="alert">
-              No fue posible preparar WhatsApp. Configura WHATSAPP_NUMBER o
-              inténtalo de nuevo.
+              No fue posible preparar WhatsApp. Verifica los datos e inténtalo de nuevo.
             </p>
           )}
         </form>
