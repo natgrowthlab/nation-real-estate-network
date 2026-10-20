@@ -69,15 +69,25 @@ main[class*="page"] > section#proyectos {
 
   /* Reserve the full scroll journey for the reveal before the next section can enter. */
   .skiper70-reveal-compact {
-    height: 210dvh;
+    height: 210dvh !important;
     margin-top: 0;
+    overflow: visible !important;
+    position: relative;
+  }
+
+  .skiper70-investment {
+    overflow: visible !important;
   }
 
   .skiper70-reveal-compact .skiper70-sticky {
+    align-items: center;
     height: 100dvh;
     min-height: 100dvh;
+    overflow: visible !important;
     padding: 2rem 0;
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
+    z-index: 1;
   }
 }
