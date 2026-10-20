@@ -21,12 +21,12 @@ main[class*="page"] {
   background: #f1f1f1 !important;
 }
 
-/* Keep the hero within the same 1180px content rail used by every section. */
+/* The image stays full-bleed; only its content follows the 1180px section rail. */
 main[class*="page"] > section[class*="hero"] {
-  margin-inline: auto;
-  max-width: 1180px;
-  padding-inline: 28px;
-  width: calc(100% - 56px);
+  margin-inline: 0;
+  max-width: none;
+  padding-inline: max(28px, calc((100% - 1124px) / 2));
+  width: 100%;
 }
 
 /* The fade terminates in the landing canvas, not in white. */
@@ -53,9 +53,9 @@ main[class*="page"] [class*="heroContent"] {
 
 @media (max-width: 760px) {
   main[class*="page"] > section[class*="hero"] {
-    margin-inline: 20px;
+    margin-inline: 0;
     padding-inline: 20px;
-    width: calc(100% - 40px);
+    width: 100%;
   }
 
   /* Mobile uses viewport entry instead of sticky scroll; avoid a long empty track. */
