@@ -4,3 +4,9 @@ main[class*="page"] { overflow: visible; }
 .skiper70-sticky { overflow: hidden; }
 .benaq-hero-fade { background:linear-gradient(180deg,rgba(255,255,255,0) 42%,#fff 98%); bottom:0; inset-inline:0; pointer-events:none; position:absolute; top:0; z-index:1; }
 main[class*="page"] [class*="heroContent"], main[class*="page"] [class*="heroNote"] { position:relative; z-index:2; }
+
+/* The investment section keeps its reading contrast consistent, including mobile. */
+.skiper70-investment,
+.skiper70-investment :is(h2, h3, p, a, span, strong, em) {
+  color: #20211f !important;
+}
