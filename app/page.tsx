@@ -56,24 +56,31 @@ export default function PublicLanding() {
     "idle" | "sending" | "sent" | "error"
   >("idle");
   const project = projects[selectedProject];
-  async function submitContact(event: FormEvent<HTMLFormElement>) {
+  function submitContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setFormStatus("sending");
     const form = new FormData(event.currentTarget);
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(form)),
-      });
-      const result = await response.json();
-      if (!response.ok || !result.whatsappUrl) throw new Error(result.error);
-      event.currentTarget.reset();
-      setFormStatus("sent");
-      window.location.assign(result.whatsappUrl);
-    } catch {
-      setFormStatus("error");
-    }
+    const payload = Object.fromEntries(form) as Record<string, string>;
+    const message = [
+      `Hola, soy ${payload.name}.`,
+      `Me interesa: ${payload.interest}.`,
+      `Correo: ${payload.email}.`,
+      payload.phone ? `Teléfono: ${payload.phone}.` : "",
+      payload.message ? `Mensaje: ${payload.message}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    // Persist the lead when possible, without holding back the WhatsApp handoff.
+    void fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+
+    event.currentTarget.reset();
+    setFormStatus("sent");
+    window.location.assign(`https://wa.me/573104590887?text=${encodeURIComponent(message)}`);
   }
   return (
     <main className={styles.page} style={{ display: "block", width: "100%" }}>
@@ -410,9 +417,7 @@ export default function PublicLanding() {
             type="submit"
             disabled={formStatus === "sending"}
           >
-            {formStatus === "sending"
-              ? "Preparando WhatsApp…"
-              : "Continuar por WhatsApp"}
+            Continuar por WhatsApp
             <ArrowRight size={17} />
           </button>
           <p className={styles.whatsappHint}>
@@ -421,11 +426,6 @@ export default function PublicLanding() {
           {formStatus === "sent" && (
             <p className={styles.success} role="status">
               Abriendo WhatsApp…
-            </p>
-          )}
-          {formStatus === "error" && (
-            <p className={styles.error} role="alert">
-              No fue posible preparar WhatsApp. Verifica los datos e inténtalo de nuevo.
             </p>
           )}
         </form>
