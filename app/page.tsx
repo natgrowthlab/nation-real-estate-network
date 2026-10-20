@@ -37,7 +37,7 @@ const projects = [
     rooms: "3 alcobas",
     area: "59 m²",
     delivery: "Prelanzamiento",
-    image: "/brand/project-lumina.jpg",
+    image: "/brand/project-lumina.png",
     features: [
       "Sala comedor",
       "Alcoba principal con baño",
