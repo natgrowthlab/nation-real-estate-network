@@ -83,11 +83,13 @@ main[class*="page"] > section#proyectos {
   /* Explicitly pin the reading layer on mobile while the word reveal is active. */
   .skiper70-reveal-compact .skiper70-mobile-pinned {
     background: #f1f1f1;
-    inset: 0;
+    inset-block: 0;
+    left: 50%;
     margin: 0;
-    max-width: none;
+    max-width: 896px;
     position: fixed;
-    width: 100%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
     z-index: 4;
   }
 }
