@@ -31,7 +31,7 @@ const projects = [
     name: "Lúmina",
     place: "Apartamentos de 59 m²",
     status: "Prelanzamiento",
-    price: "Desde $175 millones COP",
+    price: "Desde $180 millones COP",
     detail:
       "Una propuesta residencial de prelanzamiento con una distribución completa para vivir con comodidad todos los días.",
     rooms: "3 alcobas",
